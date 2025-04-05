@@ -1,4 +1,5 @@
-import { Quote } from './types'
+// src/features/quotes/QuotesList.tsx
+import { Quote, Location } from '@/types'
 import QuoteItem from './QuoteItem'
 
 type Props = {
@@ -6,9 +7,10 @@ type Props = {
   loading: boolean
   onUpdated: () => void
   getUser: (id: number) => string
+  locations: Location[]
 }
 
-export default function QuotesList({ quotes, loading, onUpdated, getUser }: Props) {
+export default function QuotesList({ quotes, loading, onUpdated, getUser, locations }: Props) {
   if (loading) {
     return <p className="text-gray-500">Loading quotes...</p>
   }
@@ -25,6 +27,7 @@ export default function QuotesList({ quotes, loading, onUpdated, getUser }: Prop
           quote={q}
           onUpdated={onUpdated}
           getUser={getUser}
+          locations={locations}
         />
       ))}
     </ul>

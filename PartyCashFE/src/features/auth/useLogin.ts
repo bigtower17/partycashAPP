@@ -7,11 +7,11 @@ export function useLogin() {
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
 
-  const handleLogin = async (email: string, password: string) => {
+  const handleLogin = async (loginValue: string, password: string) => {
     setLoading(true)
     setError(null)
     try {
-      const token = await login(email, password)
+      const token = await login(loginValue, password)
       localStorage.setItem('token', token)
       navigate('/dashboard')
     } catch (err: any) {

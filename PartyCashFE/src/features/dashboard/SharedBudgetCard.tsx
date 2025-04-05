@@ -1,3 +1,4 @@
+// File: src/features/dashboard/SharedBudgetCard.tsx
 import { useEffect, useState } from 'react'
 import api from '@/lib/api'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -35,6 +36,6 @@ function SharedBudgetCard() {
       </CardContent>
     </Card>
   )
-};
+}
 
 export { SharedBudgetCard }

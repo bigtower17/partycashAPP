@@ -18,7 +18,7 @@ import { LocationForm } from '@/features/locations/LocationForm'
 import { LocationBudget } from '@/features/locations/LocationBudget'
 import { ExportReports } from '@/features/reports/ExportReports'
 import StartingCashManager from '@/features/startingCash/StartingCashManager'
-import { UsersAdminPanel } from '@/features/users/UsersAdminPanel'
+import { UsersAdminDashboard } from '@/features/users/UsersAdminDashboard'
 import AppLayout from './AppLayout'
 
 const LocationBudgetWrapper: FC = () => {
@@ -51,7 +51,7 @@ const App: FC = () => {
           <Route path="location-budget/:locationId" element={<LocationBudgetWrapper />} />
           <Route path="export" element={<ExportReports />} />
           <Route path="starting-cash-dashboard" element={<StartingCashManager />} />
-          <Route path="users-admin" element={<UsersAdminPanel />} />
+          <Route path="users-admin" element={<UsersAdminDashboard />} />
           <Route index element={<Navigate to="/dashboard" replace />} />
         </Route>
 

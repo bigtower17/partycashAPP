@@ -1,40 +1,42 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const pool = require('../db'); // Database connection
+const { registerUser, loginUser } = require('../services/authService');
 
-// Register new user
 const register = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, username } = req.body;
+
+  if (!email || !password || !username) {
+    return res.status(400).json({ message: 'Email, password, and username are required' });
+  }
+
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const result = await pool.query('INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id', [email, hashedPassword]);
-    res.status(201).json({ message: 'User registered successfully', userId: result.rows[0].id });
+    const user = await registerUser({ email, password, username });
+    res.status(201).json({ message: 'User registered successfully', user });
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Error registering user');
+    console.error('Error registering user:', error);
+    res.status(500).json({ message: 'Error registering user' });
   }
 };
 
-// Login user and return JWT token
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { login, password } = req.body;
+
+  if (!login || !password) {
+    return res.status(400).json({ message: 'Login and password are required' });
+  }
+
   try {
-    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    if (result.rows.length === 0) return res.status(400).send('User not found');
-
-    const user = result.rows[0];
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).send('Invalid credentials');
-
-    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const { token } = await loginUser({ login, password });
     res.json({ token });
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Error logging in');
+    if (error.message === 'USER_NOT_FOUND' || error.message === 'INVALID_CREDENTIALS') {
+      return res.status(400).json({ message: 'Invalid login credentials' });
+    }
+
+    console.error('Error logging in:', error);
+    res.status(500).json({ message: 'Error logging in' });
   }
 };
 
 module.exports = {
   register,
-  login,
+  login
 };

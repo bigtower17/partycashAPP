@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const budgetController = require('../controllers/balanceController'); // ✅ Renamed to reflect budget
+const budgetController = require('../controllers/budgetController'); // ✅ Renamed to reflect budget
 const authenticateJWT = require('../middlewares/authMiddleware');
 
 /**

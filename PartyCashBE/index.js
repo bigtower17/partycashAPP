@@ -31,7 +31,7 @@ app.use('/users', userRoutes);
 app.use('/locations', locationRoutes);
 app.use('/location-budget', locationBudgetRoutes);
 app.use('/starting-cash', startingCashRoutes); // ✅ NEW
-app.use('/export', exportRoutes); // ✅ deve esserci questa riga
+app.use('/export', exportRoutes);
 
 // Debug logs
 console.log("Auth Routes loaded at /auth");
@@ -39,9 +39,10 @@ console.log("Operation Routes loaded at /operations");
 console.log("Balance Routes loaded at /budget");
 console.log("Quote Routes loaded at /quotes");
 console.log("User Routes loaded at /users");
-console.log("Location Routes loaded at /location");
-console.log("Location Budget Routes loaded at /api/location-budget");
-console.log("Starting Cash Routes loaded at /api/starting-cash"); // ✅ NEW
+console.log("Location Routes loaded at /locations");
+console.log("Location Budget Routes loaded at /location-budget");
+console.log("Starting Cash Routes loaded at /starting-cash");
+console.log("Export Routes loaded at /export");
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {

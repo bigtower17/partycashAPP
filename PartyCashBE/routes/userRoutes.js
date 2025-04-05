@@ -135,5 +135,39 @@ router.patch('/:id/role', authenticateJWT, checkRole('admin'), userController.up
  *         description: User not found
  */
 router.delete('/:id', authenticateJWT, checkRole('admin'), userController.deleteUser);
+/**
+ * @swagger
+ * /users/{id}/password:
+ *   patch:
+ *     summary: Reset a user's password
+ *     tags:
+ *       - Users
+ *     description: Allows an admin to reset a user's password
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password reset successfully
+ *       400:
+ *         description: Password is required
+ *       404:
+ *         description: User not found or deleted
+ */
+router.patch('/:id/password', authenticateJWT, checkRole('admin'), userController.resetUserPassword);
 
 module.exports = router;

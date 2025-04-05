@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import api from '@/lib/api'
 import StartingCashForm from './StartingCashForm'
 import StartingCashCard from './StartingCashCard'
-import { StartingCash, Location } from './types'
+import { StartingCash, Location } from '@/types'
 
 export default function StartingCashManager() {
   const [locations, setLocations] = useState<Location[]>([])

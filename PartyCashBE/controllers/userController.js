@@ -1,114 +1,82 @@
-const pool = require('../db');
+// src/controllers/userController.js
+const userService = require('../services/userService');
 
-// Get user by ID (excluding deleted users)
+const createUser = async (req, res) => {
+  try {
+    const user = await userService.createUser(req.body);
+    res.status(201).json({ message: 'User created successfully', user });
+  } catch (err) {
+    console.error('Create user error:', err.message);
+    res.status(400).json({ message: err.message });
+  }
+};
+
 const getUserById = async (req, res) => {
-  const userId = parseInt(req.params.id);
-
-  if (isNaN(userId)) {
-    return res.status(400).json({ message: 'Invalid user ID' });
-  }
-
   try {
-    const result = await pool.query(
-      'SELECT id, username, email, role FROM users WHERE id = $1 AND is_deleted = false',
-      [userId]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error('Error fetching user:', error);
-    res.status(500).json({ message: 'Error fetching user' });
+    const user = await userService.getUserById(parseInt(req.params.id));
+    res.json(user);
+  } catch (err) {
+    console.error('Get user error:', err.message);
+    res.status(404).json({ message: err.message });
   }
 };
 
-// Get multiple users by IDs (excluding deleted users)
 const getUsersByIds = async (req, res) => {
-  const { ids } = req.body;
-
-  if (!Array.isArray(ids) || ids.length === 0) {
-    return res.status(400).json({ message: 'Invalid or empty user IDs array' });
-  }
-
   try {
-    const result = await pool.query(
-      'SELECT id, username, email, role FROM users WHERE id = ANY($1) AND is_deleted = false',
-      [ids]
-    );
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching users by IDs:', error);
-    res.status(500).json({ message: 'Error fetching users' });
+    const users = await userService.getUsersByIds(req.body.ids);
+    res.json(users);
+  } catch (err) {
+    console.error('Get users by IDs error:', err.message);
+    res.status(400).json({ message: err.message });
   }
 };
 
-// Update user role
 const updateUserRole = async (req, res) => {
-  const userId = parseInt(req.params.id);
-  const { role } = req.body;
-
-  if (!['admin', 'staff', 'auditor'].includes(role)) {
-    return res.status(400).json({ message: 'Invalid role value' });
-  }
-
   try {
-    const result = await pool.query(
-      'UPDATE users SET role = $1 WHERE id = $2 AND is_deleted = false RETURNING id, username, email, role',
-      [role, userId]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'User not found or deleted' });
-    }
-
-    res.json({ message: 'User role updated', user: result.rows[0] });
-  } catch (error) {
-    console.error('Error updating user role:', error);
-    res.status(500).json({ message: 'Error updating user role' });
+    const user = await userService.updateUserRole(parseInt(req.params.id), req.body.role);
+    res.json({ message: 'User role updated', user });
+  } catch (err) {
+    console.error('Update role error:', err.message);
+    res.status(400).json({ message: err.message });
   }
 };
 
-// Soft delete user
 const deleteUser = async (req, res) => {
-  const userId = parseInt(req.params.id);
-
   try {
-    const result = await pool.query(
-      'UPDATE users SET is_deleted = true WHERE id = $1 AND is_deleted = false RETURNING id',
-      [userId]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'User not found or already deleted' });
-    }
-
+    const userId = await userService.deleteUser(parseInt(req.params.id));
     res.json({ message: 'User soft deleted', userId });
-  } catch (error) {
-    console.error('Error deleting user:', error);
-    res.status(500).json({ message: 'Error deleting user' });
+  } catch (err) {
+    console.error('Delete user error:', err.message);
+    res.status(404).json({ message: err.message });
   }
 };
 
-// Get all users (excluding deleted)
-const getAllUsers = async (req, res) => {
+const getAllUsers = async (_req, res) => {
   try {
-    const result = await pool.query(
-      'SELECT id, username, email, role FROM users WHERE is_deleted = false ORDER BY id'
-    );
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching users:', error);
+    const users = await userService.getAllUsers();
+    res.json(users);
+  } catch (err) {
+    console.error('Get all users error:', err.message);
     res.status(500).json({ message: 'Error fetching users' });
+  }
+};
+
+const resetUserPassword = async (req, res) => {
+  try {
+    const user = await userService.resetUserPassword(parseInt(req.params.id), req.body.password);
+    res.json({ message: 'Password reset successfully', user });
+  } catch (err) {
+    console.error('Reset password error:', err.message);
+    res.status(400).json({ message: err.message });
   }
 };
 
 module.exports = {
+  createUser,
   getUserById,
   getUsersByIds,
   updateUserRole,
   deleteUser,
-  getAllUsers
+  getAllUsers,
+  resetUserPassword
 };

@@ -18,11 +18,14 @@ export default function DepositForm() {
       const finalDescription = selectedLocationName
         ? `${selectedLocationName}: ${description}`
         : description
+  
       await api.post('/operations/deposit', {
         amount: parseFloat(amount),
         description: finalDescription,
-        locationId: parseInt(locationId),
+        locationId: locationId ? parseInt(locationId) : null,
+        type: 'deposit' // ✅ Force default to "deposit" even if location is present
       })
+  
       alert('Deposit successful!')
       setAmount('')
       setDescription('')
@@ -34,6 +37,7 @@ export default function DepositForm() {
       setLoading(false)
     }
   }
+  
 
   return (
     <form
