@@ -37,17 +37,17 @@ export default function QuotesDashboard() {
   }, {})
 
   // Fetch locations using the custom hook
-  const { locations, loading: locationsLoading } = useLocations()
+  const { locations } = useLocations()
 
   return (
     <div className="p-6 space-y-8">
       <div>
-        <h2 className="text-2xl font-bold mb-4">Create New Quote</h2>
+        <h2 className="text-2xl font-bold mb-4">Gestione Spese e Preventivi</h2>
         <QuoteForm onQuoteCreated={fetchQuotes} />
       </div>
 
       <div>
-        <h2 className="text-2xl font-bold mb-4">Quotes</h2>
+        <h2 className="text-2xl font-bold mb-4">Spese</h2>
         <QuotesList
           quotes={quotes}
           loading={loading}

@@ -11,8 +11,8 @@ function validatePositiveNumber(value, field = 'value') {
   }
   function validateAmount(amount) {
     const num = Number(amount);
-    if (isNaN(num) || num <= 0) {
-      throw new Error('Invalid amount. Must be a positive number.');
+    if (isNaN(num) || num < 0) {
+      throw new Error('Invalid amount. Must be a number greater than or equal to 0.');
     }
     return num;
   }

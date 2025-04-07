@@ -19,7 +19,7 @@ export default function QuoteForm({ onQuoteCreated }: Props) {
       setForm({ name: '', notes: '', amount: '' })
       onQuoteCreated()
     } catch (err) {
-      console.error('Error creating quote:', err)
+      console.error('Errore creazione spesa:', err)
     }
   }
 
@@ -27,20 +27,20 @@ export default function QuoteForm({ onQuoteCreated }: Props) {
     <div className="bg-white p-4 shadow rounded-md space-y-3">
       <input
         className="border p-2 rounded w-full"
-        placeholder="Name"
+        placeholder="Nome"
         value={form.name}
         onChange={e => setForm({ ...form, name: e.target.value })}
       />
       <input
         className="border p-2 rounded w-full"
-        placeholder="Notes"
+        placeholder="Descrizione"
         value={form.notes}
         onChange={e => setForm({ ...form, notes: e.target.value })}
       />
       <input
         type="number"
         className="border p-2 rounded w-full"
-        placeholder="Amount"
+        placeholder="Importo"
         value={form.amount}
         onChange={e => setForm({ ...form, amount: e.target.value })}
       />
@@ -48,7 +48,7 @@ export default function QuoteForm({ onQuoteCreated }: Props) {
         onClick={handleCreate}
         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
       >
-        Add Quote
+        Aggiungi Spesa
       </button>
     </div>
   )

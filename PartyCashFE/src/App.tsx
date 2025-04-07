@@ -3,8 +3,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
-  useParams,
+  Navigate
 } from 'react-router-dom'
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
@@ -15,17 +14,11 @@ import WithdrawForm from '@/features/operations/WithdrawForm'
 import QuotesDashboard from '@/features/quotes/QuotesDashboard'
 import { LocationList } from '@/features/locations/LocationList'
 import { LocationForm } from '@/features/locations/LocationForm'
-import { LocationBudget } from '@/features/locations/LocationBudget'
+import { LocationDashboard } from '@/features/locations/LocationsDashboard'
 import { ExportReports } from '@/features/reports/ExportReports'
 import StartingCashManager from '@/features/startingCash/StartingCashManager'
 import { UsersAdminDashboard } from '@/features/users/UsersAdminDashboard'
 import AppLayout from './AppLayout'
-
-const LocationBudgetWrapper: FC = () => {
-  const { locationId } = useParams<{ locationId: string }>()
-  const id = locationId ? parseInt(locationId, 10) : 0
-  return <LocationBudget locationId={id} />
-}
 
 const App: FC = () => {
   return (
@@ -48,11 +41,13 @@ const App: FC = () => {
           <Route path="quotes" element={<QuotesDashboard />} />
           <Route path="locations" element={<LocationList />} />
           <Route path="locations/:id" element={<LocationForm />} />
-          <Route path="location-budget/:locationId" element={<LocationBudgetWrapper />} />
+          {/* Use LocationDashboard to display all location budgets */}
+          <Route path="location-budget" element={<LocationDashboard />} />
           <Route path="export" element={<ExportReports />} />
           <Route path="starting-cash-dashboard" element={<StartingCashManager />} />
           <Route path="users-admin" element={<UsersAdminDashboard />} />
           <Route index element={<Navigate to="/dashboard" replace />} />
+          
         </Route>
 
         <Route path="*" element={<NotFound />} />

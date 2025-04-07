@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { exportOperationsCSV, exportOperationsPDF, exportLocationReportCSV, exportLocationReportPDF } = require('../controllers/exportController');
+const { exportOperationsCSV, exportOperationsPDF, exportLocationReportCSV, exportLocationReportPDF, generateExportUrl } = require('../controllers/exportController');
 const authenticateJWT = require('../middlewares/authMiddleware');
 const checkRole = require('../middlewares/roleMiddleware');
+const validateSignedToken = require('../middlewares/validateSignedToken');
 
 /**
  * @swagger
@@ -27,7 +28,7 @@ const checkRole = require('../middlewares/roleMiddleware');
  *       500:
  *         description: Errore durante l'esportazione
  */
-router.get('/operations/csv', authenticateJWT, checkRole('admin', 'auditor'), exportOperationsCSV);
+router.get('/operations/csv', validateSignedToken, exportOperationsCSV);
 
 /**
  * @swagger
@@ -52,7 +53,7 @@ router.get('/operations/csv', authenticateJWT, checkRole('admin', 'auditor'), ex
  *       500:
  *         description: Errore durante l'esportazione
  */
-router.get('/operations/pdf', authenticateJWT, checkRole('admin', 'auditor'), exportOperationsPDF);
+router.get('/operations/pdf', validateSignedToken, exportOperationsPDF) // ✅
 
 /**
  * @swagger
@@ -71,7 +72,7 @@ router.get('/operations/pdf', authenticateJWT, checkRole('admin', 'auditor'), ex
  *               type: string
  *               format: binary
  */
-router.get('/locations/csv', authenticateJWT, checkRole('admin', 'auditor'), exportLocationReportCSV);
+router.get('/locations/pdf', validateSignedToken, exportLocationReportPDF) // ✅
 
 /**
  * @swagger
@@ -90,8 +91,17 @@ router.get('/locations/csv', authenticateJWT, checkRole('admin', 'auditor'), exp
  *               type: string
  *               format: binary
  */
-router.get('/locations/pdf', authenticateJWT, checkRole('admin', 'auditor'), exportLocationReportPDF);
+router.get('/locations/csv', validateSignedToken, exportLocationReportCSV);
 
+
+/**
+ * @swagger
+ * /export/operations/csv:
+ *   get:
+ *     summary: Esporta le operazioni in formato CSV
+ *     ...
+ */
+router.post('/generate-url', authenticateJWT, checkRole('admin', 'auditor'), generateExportUrl);
 
 module.exports = router;
 

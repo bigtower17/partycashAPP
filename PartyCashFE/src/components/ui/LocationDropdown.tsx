@@ -23,7 +23,7 @@ export default function LocationDropdown({ value, onChange, onSelectLocation }: 
         const response = await api.get('/locations')
         setLocations(response.data)
       } catch (error) {
-        console.error('Error fetching locations:', error)
+        console.error('Errore caricamento postazioni:', error)
       } finally {
         setLoading(false)
       }
@@ -42,21 +42,21 @@ export default function LocationDropdown({ value, onChange, onSelectLocation }: 
 
   return (
     <div>
-      <label className="block mb-1 font-medium">Location</label>
+      <label className="block mb-1 font-medium">Postazione</label>
       <select
         value={value}
         onChange={handleSelect}
         className="w-full p-2 border rounded"
         required
       >
-        <option value="">Select Location</option>
+        <option value="">Scegli postazione</option>
         {locations.map((loc) => (
           <option key={loc.id} value={loc.id}>
             {loc.name}
           </option>
         ))}
       </select>
-      {loading && <p className="text-sm text-gray-500">Loading locations...</p>}
+      {loading && <p className="text-sm text-gray-500">Caricamento postazioni...</p>}
     </div>
   )
 }

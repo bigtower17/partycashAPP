@@ -1,7 +1,8 @@
 const queries = require('../models/startingCashModel');
 const locationQueries = require('../models/locationModel');
 const { validateAmount } = require('../utils/validate');
-const { query, transaction } = require('../services/dbService'); // ✅ centralized DB access
+const { query, transaction } = require('../services/dbService');
+const { ensureLocationBudget } = require('../utils/budgetUtils'); // ✅ correct import
 
 async function getStartingCashByLocation(locationId) {
   const result = await query(queries.getAssignedStartingCash(), [locationId]);
@@ -25,11 +26,10 @@ async function assignStartingCash({ locationId, amount, userId }) {
       [locationId, validatedAmount, userId]
     );
 
-    await client.query(
-      queries.updateLocationBudgetAdd(),
-      [validatedAmount, userId, locationId]
-    );
+    // ✅ Ensure budget exists but do NOT increment it
+    await ensureLocationBudget(client, locationId, 0, userId); // <- 0 to only ensure presence
 
+    // Log operation only (no effect on budget)
     await client.query(
       queries.insertOperation(),
       [
@@ -63,10 +63,7 @@ async function recoverStartingCash({ id, userId, notes }) {
       [userId, notes || null, id]
     );
 
-    await client.query(
-      queries.updateLocationBudgetSubtract(),
-      [validatedAmount, userId, sc.location_id]
-    );
+
 
     await client.query(
       queries.insertOperation(),

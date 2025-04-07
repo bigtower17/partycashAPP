@@ -3,16 +3,12 @@ import api from '@/lib/api'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { LocationBudgetData } from '@/types'
 
-type LocationBudget = {
-  current_balance: number
-  location_name: string
-  updated_at: string
-  last_updated_by: number
-}
+
 
 export function LocationBudget({ locationId }: { locationId: number }) {
-  const [budgetData, setBudgetData] = useState<LocationBudget | null>(null)
+  const [budgetData, setBudgetData] = useState<LocationBudgetData | null>(null)
   const [amount, setAmount] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -47,8 +43,9 @@ export function LocationBudget({ locationId }: { locationId: number }) {
       <CardContent>
         {budgetData ? (
           <>
-            <p className="text-2xl font-semibold">€ {budgetData.current_balance.toFixed(2)}</p>
-            <div className="mt-4 flex gap-2">
+            <p className="text-2xl font-semibold">
+              € {Number(budgetData.current_balance).toFixed(2)}
+            </p>            <div className="mt-4 flex gap-2">
               <Input
                 type="number"
                 value={amount}

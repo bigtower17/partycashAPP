@@ -46,6 +46,7 @@ function insertWithdrawal() {
   `;
 }
 
+
 function getBudgetBalance() {
   return `
     SELECT current_balance FROM budget LIMIT 1
@@ -90,6 +91,28 @@ function insertLocationBudget() {
     VALUES ($1, $2, NOW(), $3)
   `;
 }
+
+function updateSharedBudgetByAmount() {
+  return `
+    UPDATE budget
+    SET current_balance = current_balance + $1,
+        updated_at = NOW(),
+        last_updated_by = $2
+    WHERE is_shared = TRUE
+  `;
+}
+
+// If you want to unify your getBudgetBalance() to also look for is_shared = TRUE:
+function getBudgetBalance() {
+  return `
+    SELECT current_balance 
+    FROM budget
+    WHERE is_shared = TRUE
+    LIMIT 1
+  `;
+}
+
+
 module.exports = {
   insertOperation,
   updateSharedBudget,
@@ -101,6 +124,8 @@ module.exports = {
   getOperationsWithLocation,
   checkLocationExists,
   checkLocationBudgetExists,
-  insertLocationBudget
+  insertLocationBudget,
+  updateSharedBudgetByAmount,
+  getBudgetBalance,
 
 };

@@ -3,12 +3,8 @@ import api from '@/lib/api'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
+import { Location } from '@/types'
 
-type Location = {
-  id: number
-  name: string
-  // Add other fields as needed
-}
 
 export function LocationList() {
   const [locations, setLocations] = useState<Location[]>([])

@@ -15,11 +15,12 @@ const getLocationBudget = async (req, res) => {
 }
 
 const updateLocationBudget = async (req, res) => {
-  const { locationId } = req.params
-  const { amount } = req.body
-  const userId = req.user.id
+  const { locationId } = req.params;
+  const { amount, init } = req.body;
+  const userId = req.user.id; // ← viene già preso dal token (non serve passarlo dal client se usi JWT)
+  
 
-  if (isNaN(amount) || Number(amount) <= 0) {
+  if (!init && (isNaN(amount) || Number(amount) <= 0)) {
     return res.status(400).json({ message: 'L\'importo deve essere un numero positivo' })
   }
 
@@ -35,7 +36,18 @@ const updateLocationBudget = async (req, res) => {
   }
 }
 
+const getAllLocationBudgets = async (req, res) => {
+  try {
+    const budgets = await locationBudgetService.fetchAllLocationBudgets();
+    res.json(budgets);
+  } catch (err) {
+    console.error('Error fetching location budgets:', err);
+    res.status(500).send('Errore del server');
+  }
+};
+
 module.exports = {
   getLocationBudget,
-  updateLocationBudget
-}
+  updateLocationBudget,
+  getAllLocationBudgets
+};

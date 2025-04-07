@@ -1,7 +1,7 @@
 import { useState, FormEvent } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Location } from './types'
+import { Location } from '@/types'
 import api from '@/lib/api'
 
 type Props = {
@@ -35,9 +35,9 @@ export default function StartingCashForm({ locations, onAssigned }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto p-6 space-y-4 bg-white rounded shadow">
-      <h2 className="text-xl font-bold">Assign Starting Cash</h2>
+      <h2 className="text-xl font-bold">Assegna Fondocassa</h2>
       <div className="flex flex-col space-y-2">
-        <label className="font-medium">Select Location</label>
+        <label className="font-medium">Scegli Postazione</label>
         <select
           className="border border-gray-300 p-2 rounded"
           value={selectedLocation}
@@ -50,14 +50,16 @@ export default function StartingCashForm({ locations, onAssigned }: Props) {
       </div>
       <Input
         type="number"
-        placeholder="Amount"
+        placeholder="Importo"
         value={amount}
         onChange={e => setAmount(e.target.value)}
         required
       />
-      <Button type="submit" disabled={loadingAssign}>
-        {loadingAssign ? 'Assigning...' : 'Assign Starting Cash'}
-      </Button>
+      <div className="flex justify-center">
+      <Button className="bg-green-200 text-black" type="submit" disabled={loadingAssign}>
+        {loadingAssign ? 'Assigning...' : 'Assegna Fondocassa'}
+      </Button>  
+      </div>
     </form>
   )
 }

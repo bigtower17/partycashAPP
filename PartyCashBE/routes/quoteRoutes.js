@@ -16,6 +16,31 @@ const authenticateJWT = require('../middlewares/authMiddleware');
  *     responses:
  *       200:
  *         description: List of quotes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   name:
+ *                     type: string
+ *                   notes:
+ *                     type: string
+ *                   amount:
+ *                     type: number
+ *                   status:
+ *                     type: string
+ *                   location_id:
+ *                     type: integer
+ *                   location_name:
+ *                     type: string
+ *                   created_at:
+ *                     type: string
+ *                   updated_at:
+ *                     type: string
  */
 router.get('/', authenticateJWT, quoteController.getQuotes);
 
@@ -140,7 +165,7 @@ router.delete('/:id', authenticateJWT, quoteController.deleteQuote);
  *     description: |
  *       Confirm an expense quote as paid.  
  *       If a locationId is provided in the body, the quote is paid directly by that location's budget  
- *       (and still contributes to the total developed by that location).
+ *       and the quote will be updated with the related location_id.
  *     tags:
  *       - Quotes
  *     security:

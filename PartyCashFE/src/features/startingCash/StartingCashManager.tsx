@@ -31,7 +31,7 @@ export default function StartingCashManager() {
   const handleReimburse = async (entryId: number) => {
     setProcessingId(entryId)
     try {
-      await api.post(`/starting-cash/recover/${entryId}`, { notes: 'Reimbursed' })
+      await api.post(`/starting-cash/recover/${entryId}`, { notes: 'Rimborsato' })
       fetchCashAssignments()
     } catch (err) {
       console.error(err)
@@ -46,15 +46,15 @@ export default function StartingCashManager() {
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Starting Cash Management</h1>
+      <h1 className="text-2xl font-bold">Gestione Fondocassa</h1>
 
       <StartingCashForm locations={locations} onAssigned={fetchCashAssignments} />
 
-      <h2 className="text-xl font-bold mb-2">Active Assignments</h2>
+      <h2 className="text-xl font-bold mb-2">Fondocassa attivi</h2>
       {loadingList ? (
-        <p>Loading assignments...</p>
+        <p>Caricamento fondocassa...</p>
       ) : unreimbursed.length === 0 ? (
-        <p>No active starting cash entries.</p>
+        <p>Nessun fondocassa attivo.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {unreimbursed.map(entry => (
@@ -69,7 +69,7 @@ export default function StartingCashManager() {
         </div>
       )}
 
-      <h2 className="text-xl font-bold mt-8 mb-2">Reimbursed Entries</h2>
+      <h2 className="text-xl font-bold mt-8 mb-2">Fondocassa rimborsati</h2>
       {reimbursed.length === 0 ? (
         <p>No reimbursements yet.</p>
       ) : (

@@ -31,19 +31,21 @@ const exportOperationsCSV = async (req, res) => {
 
 const exportOperationsPDF = async (req, res) => {
   try {
-    const operations = await fetchOperations();
-    const doc = new PDFDocument({ margin: 40, size: 'A4' });
+    const operations = await fetchOperations()
+    const doc = new PDFDocument({ margin: 40, size: 'A4', layout: 'landscape' })
 
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename=operations.pdf');
-    doc.pipe(res);
+    res.setHeader('Content-Type', 'application/pdf')
+    res.setHeader('Content-Disposition', 'attachment; filename=operations.pdf')
+    doc.pipe(res)
 
-    renderOperationsPDF(doc, operations);
+    renderOperationsPDF(doc, operations) // scrive il contenuto
+    doc.end() // chiude lo stream dopo
   } catch (error) {
-    console.error('Errore esportazione PDF:', error);
-    res.status(500).send("Errore durante l'esportazione PDF");
+    console.error('Errore esportazione PDF:', error)
+    res.status(500).send("Errore durante l'esportazione PDF")
   }
-};
+}
+
 
 const exportLocationReportCSV = async (req, res) => {
   try {
@@ -75,9 +77,29 @@ const exportLocationReportPDF = async (req, res) => {
   }
 };
 
+const { generateSignedExportToken } = require('../utils/signedUrl');
+
+const generateExportUrl = (req, res) => {
+  const { report, type } = req.body;
+
+  const allowedReports = ['operations', 'locations'];
+  const allowedTypes = ['csv', 'pdf'];
+
+  if (!allowedReports.includes(report) || !allowedTypes.includes(type)) {
+    return res.status(400).json({ message: 'Tipo di report o formato non valido' });
+  }
+
+  const token = generateSignedExportToken({ report, type });
+  const url = `${process.env.BASE_URL || 'http://localhost:3000'}/export/${report}/${type}?token=${token}`;
+
+  return res.json({ url });
+};
+
 module.exports = {
   exportOperationsCSV,
   exportOperationsPDF,
   exportLocationReportCSV,
-  exportLocationReportPDF
+  exportLocationReportPDF,
+  generateExportUrl 
+  
 };

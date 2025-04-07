@@ -1,31 +1,52 @@
-// File: src/features/dashboard/LocationBudgetDashboard.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocations } from '@/hooks/useLocation';
 import { useLocationBudgets } from '@/hooks/useLocationBudget';
 import { useGrossBudgets } from '@/hooks/useGrossBudgets';
 import { LocationBudgetCard } from './LocationBudgetCard';
+import api from '@/lib/api';
+import { StartingCash } from '@/types';
 
 export function LocationBudgetDashboard() {
   const { locations, loading: locLoading, error: locError } = useLocations();
   const { budgets, loading: budgetLoading, error: budgetError } = useLocationBudgets(locations);
   const { grossBudgets, loading: grossLoading, error: grossError } = useGrossBudgets(locations);
 
+  const [startingCashEntries, setStartingCashEntries] = useState<StartingCash[]>([]);
+
   const loading = locLoading || budgetLoading || grossLoading;
   const error = locError || budgetError || grossError;
 
-  if (loading) return <p>Loading budgets...</p>;
-  if (error) return <p>{error}</p>;
+  useEffect(() => {
+    const fetchStartingCash = async () => {
+      try {
+        const res = await api.get('/starting-cash/all');
+        setStartingCashEntries(res.data);
+      } catch (err) {
+        console.error('Errore caricamento fondocassa:', err);
+      }
+    };
+    fetchStartingCash();
+  }, []);
 
-  // Only display locations that have a net budget available
-  const locationsWithBudget = locations.filter(loc => budgets[loc.id]);
+  // Filter locations to only those with an existing budget row
+  const locationsWithBudget = locations.filter((loc) => budgets[loc.id]);
+
+  // Calculate pending starting cash for a location (if needed)
+  const getPendingStartingCashAmount = (locationId: number): number => {
+    return startingCashEntries
+      .filter((entry) => entry.location_id === locationId && !entry.recovered_at)
+      .reduce((sum, entry) => sum + parseFloat(entry.amount), 0);
+  };
+
+  if (loading) return <p>Caricamento incassi...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold mb-4">Locations Performance Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-4">Performance Postazioni</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {locationsWithBudget.map(loc => {
+        {locationsWithBudget.map((loc) => {
           const budgetData = budgets[loc.id];
-          const netBalance = parseFloat(budgetData.current_balance.toString());
           const gross = grossBudgets[loc.id] || 0;
           return (
             <LocationBudgetCard
@@ -33,7 +54,9 @@ export function LocationBudgetDashboard() {
               location={loc}
               budgetData={budgetData}
               gross={gross}
+              pendingStartingCashAmount={getPendingStartingCashAmount(loc.id)}
             />
+
           );
         })}
       </div>

@@ -46,13 +46,19 @@ const insertWithdrawalOperation = () => `
 
 const markQuoteAsPaid = () => `
   UPDATE quotes
-  SET status = $1, paid_by = $2, updated_at = NOW()
-  WHERE id = $3
+  SET status = $1, paid_by = $2, updated_at = NOW(), location_id = $3
+  WHERE id = $4
 `;
 
+
 const getAllQuotes = () => `
-  SELECT * FROM quotes WHERE deleted = false ORDER BY created_at DESC
+  SELECT q.*, l.name AS location_name
+  FROM quotes q
+  LEFT JOIN location l ON q.location_id = l.id
+  WHERE q.deleted = false
+  ORDER BY q.created_at DESC
 `;
+
 
 const getQuoteByIdQuery = () => `
   SELECT * FROM quotes WHERE id = $1 AND deleted = false

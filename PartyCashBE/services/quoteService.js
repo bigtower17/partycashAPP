@@ -94,12 +94,13 @@ async function payQuote({ id, userId, locationId }) {
 
       await client.query(queries.insertWithdrawalOperation(), [
         userId,
-        quoteAmount,
+        -Math.abs(quoteAmount), // Always store withdrawal as negative
         `Payment for quote: ${quote.name}`
       ]);
+      
     }
 
-    await client.query(queries.markQuoteAsPaid(), ['paid', userId, id]);
+    await client.query(queries.markQuoteAsPaid(), ['paid', userId, locationId || null, id]);
 
     return { paid_by: userId };
   });

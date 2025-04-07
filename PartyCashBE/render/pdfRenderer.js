@@ -1,61 +1,89 @@
-const PDFDocument = require('pdfkit');
-const { formatDate, formatCurrency } = require('../utils/format');
+const { formatDate, formatCurrency } = require('../utils/format')
+
+// Mappa operazioni (solo label)
+const operationStyleMap = {
+  deposit: { label: 'Scarico Cassa' },
+  withdrawal: { label: 'Pagamento Cassa Generale' },
+  local_withdrawal: { label: 'Pagamento da Postazione' },
+  deposit_virtual: { label: 'Entrata Virtuale' },
+  starting_cash_assigned: { label: 'Fondocassa assegnato' },
+  starting_cash_recovered: { label: 'Fondocassa recuperato' }
+}
 
 function renderOperationsPDF(doc, operations) {
-  doc.fontSize(18).text('Registro Operazioni', { align: 'center' }).moveDown();
+  doc.fontSize(18).text('Registro Operazioni', { align: 'center' }).moveDown(1.5)
 
-  doc.fontSize(12);
-  const headerY = doc.y;
-  doc.text('ID', 40, headerY, { width: 30 });
-  doc.text('Tipo', 70, headerY, { width: 60 });
-  doc.text('Importo', 130, headerY, { width: 60 });
-  doc.text('Descrizione', 190, headerY, { width: 170 });
-  doc.text('Data', 360, headerY, { width: 110 });
-  doc.text('Utente', 470, headerY, { width: 70 });
-  doc.text('Location', 540, headerY, { width: 50 });
-  doc.moveTo(40, headerY + 15).lineTo(590, headerY + 15).stroke();
-  doc.moveDown(2);
+  // Header
+  doc.font('Helvetica-Bold').fontSize(11)
+  const tableTop = doc.y
+
+  const columnPositions = {
+    id: 40,
+    type: 80,
+    amount: 200,
+    desc: 280,
+    date: 480,
+    user: 560,
+    loc: 630
+  }
+
+  doc.text('ID', columnPositions.id, tableTop, { width: 30 })
+  doc.text('Tipo', columnPositions.type, tableTop, { width: 100 })
+  doc.text('Importo', columnPositions.amount, tableTop, { width: 70, align: 'right' })
+  doc.text('Descrizione', columnPositions.desc, tableTop, { width: 180 })
+  doc.text('Data', columnPositions.date, tableTop, { width: 80 })
+  doc.text('Utente', columnPositions.user, tableTop, { width: 60 })
+  doc.text('Postazione', columnPositions.loc, tableTop, { width: 100 })
+
+  doc.moveTo(40, doc.y + 12).lineTo(780, doc.y + 12).stroke()
+  doc.moveDown()
+
+  // Body
+  doc.font('Helvetica').fontSize(10)
 
   operations.forEach(op => {
-    const y = doc.y;
-    doc.fontSize(10);
-    doc.text(op.id.toString(), 40, y, { width: 30 });
-    doc.text(op.type || '-', 70, y, { width: 60 });
-    doc.text(formatCurrency(op.amount), 130, y, { width: 60, align: 'right' });
-    doc.text(op.description || '-', 190, y, { width: 170 });
-    doc.text(formatDate(op.created_at), 360, y, { width: 110 });
-    doc.text(op.user || '-', 470, y, { width: 70 });
-    doc.text(op.location || '-', 540, y, { width: 50 });
+    const y = doc.y
+    const style = operationStyleMap[op.type] || { label: op.type }
 
-    if (doc.y > 750) doc.addPage();
-  });
+    doc.text(op.id.toString(), columnPositions.id, y, { width: 30 })
+    doc.text(style.label, columnPositions.type, y, { width: 100 })
+    doc.text(formatCurrency(op.amount), columnPositions.amount, y, { width: 70, align: 'right' })
+    doc.text(op.description || '-', columnPositions.desc, y, { width: 180 })
+    doc.text(formatDate(op.created_at), columnPositions.date, y, { width: 80 })
+    doc.text(op.user || '-', columnPositions.user, y, { width: 60 })
+    doc.text(op.location || '-', columnPositions.loc, y, { width: 100 })
 
-  doc.end();
+    doc.moveDown(0.6)
+
+    if (doc.y > 540) {  // spazio verticale disponibile in landscape
+      doc.addPage({ layout: 'landscape' })
+      doc.font('Helvetica').fontSize(10)
+    }
+  })
 }
 
 function renderLocationReportPDF(doc, locations) {
-  doc.fontSize(18).text('Report Location', { align: 'center' }).moveDown();
+  doc.fontSize(18).text('Report Location', { align: 'center' }).moveDown()
 
   locations.forEach(loc => {
-    doc.fontSize(14).text(loc.name).moveDown(0.2);
+    doc.fontSize(14).text(loc.name).moveDown(0.2)
     doc.fontSize(10)
       .text(`Fondocassa iniziale: € ${loc.startingCash}`)
       .text(`Totale incassato: € ${loc.totalIncasso}`)
       .text(`Operazioni registrate: ${loc.operations.length}`)
-      .moveDown(0.5);
+      .moveDown(0.5)
 
     loc.operations.forEach(op => {
-      doc.text(`- [${op.type}] €${formatCurrency(op.amount)} - ${op.description || '-'} (${formatDate(op.created_at)})`);
-    });
+      const label = operationStyleMap[op.type]?.label || op.type
+      doc.text(`- [${label}] €${formatCurrency(op.amount)} - ${op.description || '-'} (${formatDate(op.created_at)})`)
+    })
 
-    doc.moveDown();
-    doc.moveTo(doc.x, doc.y).lineTo(570, doc.y).stroke().moveDown();
-  });
-
-  doc.end();
+    doc.moveDown()
+    doc.moveTo(doc.x, doc.y).lineTo(780, doc.y).stroke().moveDown()
+  })
 }
 
 module.exports = {
   renderOperationsPDF,
   renderLocationReportPDF
-};
+}

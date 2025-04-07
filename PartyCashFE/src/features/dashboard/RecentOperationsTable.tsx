@@ -1,8 +1,7 @@
-// File: src/features/dashboard/RecentOperationsTable.tsx
 import { useEffect, useState } from 'react'
 import api from '@/lib/api'
 import { Operation, User } from '@/types'
-import OperationItem from './OperationItem'
+import OperationItem from './operationsElements/OperationItem'
 
 type Props = {
   users: User[]

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import api from '@/lib/api'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import LocationDropdown from '@/components/LocationDropdown' // adjust the import path as needed
+import LocationDropdown from '@/components/ui/LocationDropdown' // adjust the import path as needed
 
 export default function DepositForm() {
   const [amount, setAmount] = useState('')
@@ -26,13 +26,13 @@ export default function DepositForm() {
         type: 'deposit' // ✅ Force default to "deposit" even if location is present
       })
   
-      alert('Deposit successful!')
+      alert('Scarico avvenuto con successo')
       setAmount('')
       setDescription('')
       setLocationId('')
       setSelectedLocationName('')
     } catch (err) {
-      alert('Error during deposit')
+      alert('Errore durante lo scarico')
     } finally {
       setLoading(false)
     }
@@ -44,17 +44,17 @@ export default function DepositForm() {
       onSubmit={handleSubmit}
       className="max-w-md mx-auto mt-10 space-y-4 bg-white p-6 rounded shadow"
     >
-      <h2 className="text-xl font-semibold">Make a Deposit</h2>
+      <h2 className="text-xl font-semibold">Effettua uno scarico</h2>
       <Input
         type="number"
-        placeholder="Amount"
+        placeholder="Importo"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
         required
       />
       <Input
         type="text"
-        placeholder="Description"
+        placeholder="Descrizione"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         required
@@ -67,7 +67,7 @@ export default function DepositForm() {
         }}
       />
       <Button type="submit" disabled={loading} className="w-full">
-        {loading ? 'Processing...' : 'Submit'}
+        {loading ? 'Processing...' : 'Effettua Scarico'}
       </Button>
     </form>
   )

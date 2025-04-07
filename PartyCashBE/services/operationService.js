@@ -52,19 +52,38 @@ async function deposit({ amount, description, locationId, userId, type = 'deposi
 
 
 async function withdraw({ amount, description, userId }) {
-  const validatedAmount = validateAmount(amount); // ✅ validate input
+  const validatedAmount = validateAmount(amount);
+  const client = await pool.connect();
 
-  const budgetResult = await pool.query(queries.getBudgetBalance());
-  const currentBalance = budgetResult.rows[0]?.current_balance || 0;
+  try {
+    await client.query('BEGIN');
 
-  if (currentBalance < validatedAmount) {
-    throw new Error('Insufficient funds');
+    // 1. Check the shared budget to ensure enough funds
+    const budgetResult = await client.query(queries.getBudgetBalance());
+    const currentBalance = budgetResult.rows[0]?.current_balance || 0;
+
+    if (currentBalance < validatedAmount) {
+      throw new Error('Insufficient funds');
+    }
+
+    // 2. Insert the withdrawal operation as a negative amount
+    //    (our query does -$2, so we pass validatedAmount as is).
+    const result = await client.query(queries.insertWithdrawal(), [userId, -Math.abs(validatedAmount), description]);
+
+    // 3. Update the shared budget by adding a negative amount.
+    //    Because insertWithdrawal() stored a negative, we also pass validatedAmount
+    //    to add a negative value. However, let's unify it to pass the negative explicitly:
+    await client.query(queries.updateSharedBudgetByAmount(), [-validatedAmount, userId]);
+
+    await client.query('COMMIT');
+    return result.rows[0].id;
+  } catch (error) {
+    await client.query('ROLLBACK');
+    console.error('❌ Withdraw failed:', error);
+    throw error;
+  } finally {
+    client.release();
   }
-
-  const result = await pool.query(queries.insertWithdrawal(), [userId, validatedAmount, description]);
-  await pool.query(queries.updateSharedBudgetWithdraw(), [validatedAmount, userId]);
-
-  return result.rows[0].id;
 }
 
 async function getLastOperations() {

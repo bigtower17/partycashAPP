@@ -26,10 +26,18 @@ const updateBudget = () => `
   WHERE location_id = $3
 `;
 
+const getAllBudgets = () => `
+  SELECT lb.current_balance, lb.updated_at, lb.last_updated_by, lb.location_id, l.name AS location_name
+  FROM location_budget lb
+  JOIN location l ON lb.location_id = l.id
+  ORDER BY l.name
+`;
+
 module.exports = {
   getLocationBudget,
   checkBudgetExists,
   insertNewBudget,
   incrementExistingBudget,
   updateBudget,
+  getAllBudgets
 };

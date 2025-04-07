@@ -6,14 +6,15 @@ const {
   formatOperationRow,
   formatDate
 } = require('../utils/format');
+const { generateSignedUrlToken } = require('../utils/signedUrl');
 
 async function fetchOperations() {
-  const result = await pool.query(queries.getAllOperations);
+  const result = await pool.query(queries.getAllOperations());
   return result.rows.map(formatOperationRow);
 }
 
 async function fetchLocationReportData() {
-  const locations = await pool.query(queries.getAllLocations);
+  const locations = await pool.query(queries.getAllLocations());
   const reportData = [];
 
   for (const loc of locations.rows) {
@@ -37,15 +38,15 @@ async function fetchLocationReportData() {
 }
 
 async function fetchLocationDetailsForPDF() {
-  const locations = await pool.query(queries.getAllLocations);
+  const locations = await pool.query(queries.getAllLocations());
   const data = [];
 
   for (const loc of locations.rows) {
     const locationId = loc.id;
 
-    const startingCash = await pool.query(queries.getStartingCashTotal, [locationId]);
-    const totalIncasso = await pool.query(queries.getLocationBudget, [locationId]);
-    const operations = await pool.query(queries.getOperationsByLocation, [locationId]);
+    const startingCash = await pool.query(queries.getStartingCashTotal(), [locationId]);
+    const totalIncasso = await pool.query(queries.getLocationBudget(), [locationId]);
+    const operations = await pool.query(queries.getOperationsByLocation(), [locationId]);
 
     data.push({
       name: loc.name,
@@ -62,8 +63,24 @@ async function fetchLocationDetailsForPDF() {
   return data;
 }
 
+async function generateExportUrl(report, type) {
+  const allowedReports = ['operations', 'locations'];
+  const allowedTypes = ['csv', 'pdf'];
+
+  if (!allowedReports.includes(report) || !allowedTypes.includes(type)) {
+    throw new Error('Tipo di report o formato non valido');
+  }
+
+  const token = generateSignedUrlToken({ report, type });
+  const url = `${process.env.BASE_URL || 'http://localhost:3000'}/export/${report}/${type}?token=${token}`;
+
+  return url;
+}
+
+
 module.exports = {
   fetchOperations,
   fetchLocationReportData,
   fetchLocationDetailsForPDF,
+  generateExportUrl
 };

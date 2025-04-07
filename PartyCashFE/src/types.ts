@@ -27,6 +27,7 @@ export type LocationBudgetData = {
   location_name: string
   updated_at: string
   last_updated_by: number
+  location_id: number
 }
 export type StartingCash = {
   id: number
@@ -52,5 +53,7 @@ export type Quote = {
   updated_at: string
   deleted: boolean
   paid_by: number | null
+  location_id: number
+  location_name: string
 }
 

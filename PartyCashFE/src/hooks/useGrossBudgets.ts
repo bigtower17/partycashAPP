@@ -13,21 +13,16 @@ export function useGrossBudgets(locations: Location[]) {
 
     api.get('/operations/with-location')
       .then(res => {
-        // Assuming the endpoint returns an array of operations with snake_case field names
         const operations = res.data;
         const grossMap: Record<number, number> = {};
 
         operations.forEach((op: any) => {
-          const locationId = op.location_id; // Use snake_case field
+          const locationId = op.location_id;
           const amount = Number(op.amount);
-          if (locationId != null) {
-            if (!grossMap[locationId]) {
-              grossMap[locationId] = 0;
-            }
-            // Only sum positive amounts (incoming deposits)
-            if (amount > 0) {
-              grossMap[locationId] += amount;
-            }
+          const excludedTypes = ['starting_cash_assigned', 'starting_cash_recovered'];
+
+          if (locationId != null && amount > 0 && !excludedTypes.includes(op.type)) {
+            grossMap[locationId] = (grossMap[locationId] || 0) + amount;
           }
         });
 

@@ -1,8 +1,46 @@
 const express = require('express');
 const router = express.Router();
-const { getLocationBudget, updateLocationBudget } = require('../controllers/locationBudgetController');
+const { getLocationBudget, updateLocationBudget, getAllLocationBudgets } = require('../controllers/locationBudgetController');
 const authenticateJWT = require('../middlewares/authMiddleware');
 const checkRole = require('../middlewares/roleMiddleware');
+
+/**
+ * @swagger
+ * /location-budget/all:
+ *   get:
+ *     summary: Ottieni tutti i bilanci delle location
+ *     description: Recupera tutte le righe del budget per le location esistenti.
+ *     tags:
+ *       - Location Budget
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista di budget per location
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   location_id:
+ *                     type: number
+ *                   current_balance:
+ *                     type: number
+ *                   location_name:
+ *                     type: string
+ *                   updated_at:
+ *                     type: string
+ *                     format: date-time
+ *                   last_updated_by:
+ *                     type: number
+ *       403:
+ *         description: Accesso negato
+ *       500:
+ *         description: Errore del server
+ */
+router.get('/all', authenticateJWT, checkRole('admin', 'staff'), getAllLocationBudgets);
 
 /**
  * @swagger
@@ -39,7 +77,7 @@ const checkRole = require('../middlewares/roleMiddleware');
  *                   type: string
  *                   format: date-time
  *                 last_updated_by:
- *                   type: integer
+ *                   type: number
  *       403:
  *         description: Accesso negato
  *       500:
