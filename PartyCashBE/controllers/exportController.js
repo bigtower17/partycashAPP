@@ -102,7 +102,7 @@ const generateExportUrl = (req, res) => {
   }
 
   const token = generateSignedExportToken({ report, type });
-  const url = `${process.env.BASE_URL || 'https://staging.partycash.me'}/api/export/${report}/${type}?token=${token}`;
+  const url = `https://${process.env.DOMAIN_NAME}/api/export/${report}/${type}?token=${token}`;
 
   return res.json({ url });
 };

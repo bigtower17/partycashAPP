@@ -26,6 +26,9 @@ services:
       DB_PORT: 5432
       PORT: 3000
       JWT_SECRET: your_secret_key
+      API_URL: http://localhost:3000
+      DOMAIN_NAME: staging.partycash.me
+
     ports:
       - "3000:3000"
     volumes:
