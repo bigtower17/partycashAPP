@@ -80,7 +80,7 @@ async function generateExportUrl(report, type) {
   }
 
   const token = generateSignedUrlToken({ report, type });
-  const url = `${process.env.BASE_URL || 'https://staging.partycash.me'}/api/export/${report}/${type}?token=${token}`;
+  const url = `${process.env.DOMAIN_NAME}/api/export/${report}/${type}?token=${token}`;
 
   return url;
 }
