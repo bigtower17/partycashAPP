@@ -26,7 +26,7 @@ function renderOperationsPDF(doc, operations) {
     user: 560,
     loc: 630
   }
-
+ 
   doc.text('ID', columnPositions.id, tableTop, { width: 30 })
   doc.text('Tipo', columnPositions.type, tableTop, { width: 100 })
   doc.text('Importo', columnPositions.amount, tableTop, { width: 70, align: 'right' })
