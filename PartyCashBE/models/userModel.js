@@ -4,11 +4,10 @@
 function findUserByLoginQuery() {
   return `
     SELECT * FROM users
-    WHERE (email = $1 OR username = $1)
+    WHERE (LOWER(email) = LOWER($1) OR LOWER(username) = LOWER($1))
       AND is_deleted = false
   `;
 }
-
 /**
  * Returns a SQL string for creating a new auth user (with password).
  */
