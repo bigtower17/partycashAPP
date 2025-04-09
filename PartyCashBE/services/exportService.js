@@ -39,29 +39,37 @@ async function fetchLocationReportData() {
 
 async function fetchLocationDetailsForPDF() {
   const locations = await pool.query(queries.getAllLocations());
+  console.log('Fetched locations:', locations.rows);  // Debugging line
+
   const data = [];
 
   for (const loc of locations.rows) {
     const locationId = loc.id;
 
-    const startingCash = await pool.query(queries.getStartingCashTotal(), [locationId]);
-    const totalIncasso = await pool.query(queries.getLocationBudget(), [locationId]);
-    const operations = await pool.query(queries.getOperationsByLocation(), [locationId]);
+    try {
+      const startingCash = await pool.query(queries.getStartingCashTotal(), [locationId]);
+      const totalIncasso = await pool.query(queries.getLocationBudget(), [locationId]);
+      const operations = await pool.query(queries.getOperationsByLocation(), [locationId]);
 
-    data.push({
-      name: loc.name,
-      startingCash: formatCurrency(startingCash.rows[0].total),
-      totalIncasso: formatCurrency(totalIncasso.rows[0]?.current_balance),
-      operations: operations.rows.map(op => ({
-        ...op,
-        amount: formatCurrency(op.amount),
-        created_at: formatDate(op.created_at)
-      }))
-    });
+      data.push({
+        name: loc.name,
+        startingCash: formatCurrency(startingCash.rows[0].total),
+        totalIncasso: formatCurrency(totalIncasso.rows[0]?.current_balance),
+        operations: operations.rows.map(op => ({
+          ...op,
+          amount: formatCurrency(op.amount),
+          created_at: formatDate(op.created_at)
+        }))
+      });
+    } catch (error) {
+      console.error(`Error fetching data for location ${loc.name}:`, error);
+    }
   }
 
+  console.log('Location report data:', data);  // Debugging line
   return data;
 }
+
 
 async function generateExportUrl(report, type) {
   const allowedReports = ['operations', 'locations'];
