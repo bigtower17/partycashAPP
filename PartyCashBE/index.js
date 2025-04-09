@@ -1,4 +1,6 @@
 const express = require('express');
+const https = require('https');
+const fs = require('fs');
 const app = express();
 const dotenv = require('dotenv');
 const pool = require('./db');
@@ -21,13 +23,13 @@ dotenv.config();
 
 app.use(express.json());
 app.use(cors({
-  origin: 'https://partycash.me', // Allow requests from your frontend
+  origin: ['https://partycash.me'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Authorization', 'Content-Type'],
 }));
 setupSwagger(app);
 
-// API Routes with /api/ prefix
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/operations', operationRoutes);
 app.use('/api/budget', balanceRoutes);
@@ -51,6 +53,15 @@ console.log("Starting Cash Routes loaded at /api/starting-cash");
 console.log("Export Routes loaded at /api/export");
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on http://0.0.0.0:${PORT}`);
+
+// Load SSL certificates
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/partycash.me/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/partycash.me/fullchain.pem', 'utf8');
+const credentials = { key: privateKey, cert: certificate };
+
+// Create HTTPS server
+const httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on https://0.0.0.0:${PORT}`);
 });
