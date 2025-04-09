@@ -16,6 +16,7 @@ export function LocationList() {
 
   const [locations, setLocations] = useState<Location[]>([])
   const [loading, setLoading] = useState(true)
+  const [budgetRefreshFlag, setBudgetRefreshFlag] = useState(0) // 👈 forza il re-render
 
   useEffect(() => {
     if (!user) return
@@ -34,7 +35,7 @@ export function LocationList() {
     budgets,
     loading: budgetLoading,
     error: budgetError,
-    refetch, // 👈 usiamo refetch
+    refetch,
   } = useLocationBudgets(locations)
 
   const budgetsLoading = locations.length > 0 ? budgetLoading : false
@@ -48,7 +49,8 @@ export function LocationList() {
         amount: 0,
         init: true,
       })
-      await refetch() // 👈 aggiorna i budget dal server
+      await refetch()
+      setBudgetRefreshFlag((prev) => prev + 1) // 👈 forza aggiornamento UI
       alert('Postazione inizializzata')
     } catch (err) {
       console.error(err)
@@ -132,7 +134,7 @@ export function LocationList() {
                 <Button variant="outline" onClick={() => navigate(`/locations/${loc.id}`)}>
                   Rinomina
                 </Button>
-                {!budgets[loc.id] && (
+                {!budgets[loc.id] && budgetRefreshFlag >= 0 && ( // 👈 assicura che reagisca al cambiamento
                   <Button variant="outline" onClick={() => handleInitialize(loc.id)}>
                     Inizializza
                   </Button>
