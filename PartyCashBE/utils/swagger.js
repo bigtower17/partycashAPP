@@ -11,7 +11,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: 'https://partycash.me',
+      url: 'https://staging.partycash.me',
     },
   ],
   components: {

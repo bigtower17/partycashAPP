@@ -23,7 +23,7 @@ dotenv.config();
 
 app.use(express.json());
 app.use(cors({
-  origin: ['https://partycash.me'],
+  origin: ['https://staging.partycash.me'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Authorization', 'Content-Type'],
 }));
@@ -55,8 +55,8 @@ console.log("Export Routes loaded at /api/export");
 const PORT = process.env.PORT || 3000;
 
 // Load SSL certificates
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/partycash.me/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/partycash.me/fullchain.pem', 'utf8');
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/staging.partycash.me/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/staging.partycash.me/fullchain.pem', 'utf8');
 const credentials = { key: privateKey, cert: certificate };
 
 // Create HTTPS server
