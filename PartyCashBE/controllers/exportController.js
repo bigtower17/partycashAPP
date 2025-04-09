@@ -71,6 +71,9 @@ const exportLocationReportPDF = async (req, res) => {
     doc.pipe(res);
 
     renderLocationReportPDF(doc, locationData);
+
+    doc.end();
+    
   } catch (error) {
     console.error('Errore esportazione report location PDF:', error);
     res.status(500).send("Errore durante l'esportazione PDF");
