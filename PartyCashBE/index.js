@@ -11,6 +11,7 @@ const locationRoutes = require('./routes/locationRoutes');
 const locationBudgetRoutes = require('./routes/locationBudgetRoutes');
 const startingCashRoutes = require('./routes/startingCashRoutes'); // ✅ NEW
 const exportRoutes = require('./routes/exportRoutes');
+const initializeRoutes = require('./routes/initializeRoutes');
 
 const setupSwagger = require('./utils/swagger');
 const cors = require('cors');
@@ -32,6 +33,7 @@ app.use('/locations', locationRoutes);
 app.use('/location-budget', locationBudgetRoutes);
 app.use('/starting-cash', startingCashRoutes); // ✅ NEW
 app.use('/export', exportRoutes);
+app.use('/admin', initializeRoutes); // ora POST /admin/reset-db è disponibile
 
 // Debug logs
 console.log("Auth Routes loaded at /auth");

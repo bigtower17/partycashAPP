@@ -6,7 +6,10 @@ async function getAllLocations() {
   const result = await pool.query(queries.getAllLocations());
   return result.rows;
 }
-
+async function getAdminLocations() {
+  const result = await pool.query(queries.getAdminLocations());
+  return result.rows;
+}
 async function createLocation(name) {
   const validName = validateLocationName(name);
   const result = await pool.query(queries.insertLocation(), [validName]);
@@ -28,6 +31,15 @@ async function deleteLocation(id) {
   const result = await pool.query(queries.deleteLocation(), [id]);
   return result.rows[0] || null;
 }
+async function softDeleteLocation(id) {
+  const result = await pool.query(queries.softDeleteLocation(), [id]);
+  return result.rows[0] || null;
+}
+
+async function reactivateLocation(id) {
+  const result = await pool.query(queries.reactivateLocation(), [id]);
+  return result.rows[0] || null;
+}
 
 module.exports = {
   getAllLocations,
@@ -35,4 +47,7 @@ module.exports = {
   getLocationById,
   updateLocation,
   deleteLocation,
+  softDeleteLocation,
+  reactivateLocation,
+  getAdminLocations
 };

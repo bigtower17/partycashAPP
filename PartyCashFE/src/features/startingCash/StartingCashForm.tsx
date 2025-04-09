@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Location } from '@/types'
 import api from '@/lib/api'
+import LocationDropdown from '@/components/ui/LocationDropdown'
 
 type Props = {
   locations: Location[]
@@ -10,24 +11,31 @@ type Props = {
 }
 
 export default function StartingCashForm({ locations, onAssigned }: Props) {
-  const [selectedLocation, setSelectedLocation] = useState<number>(locations[0]?.id || 0)
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null)
   const [amount, setAmount] = useState('')
   const [loadingAssign, setLoadingAssign] = useState(false)
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+
+    if (!selectedLocation || !selectedLocation.id) {
+      alert('Seleziona una postazione valida')
+      return
+    }
+
     setLoadingAssign(true)
     try {
       await api.post('/starting-cash', {
-        locationId: selectedLocation,
+        locationId: selectedLocation.id,
         amount: parseFloat(amount)
       })
-      alert('Starting cash assigned')
+      alert('Fondocassa assegnato correttamente')
       setAmount('')
+      setSelectedLocation(null)
       onAssigned()
     } catch (err) {
       console.error(err)
-      alert('Error assigning starting cash')
+      alert('Errore nell\'assegnazione del fondocassa')
     } finally {
       setLoadingAssign(false)
     }
@@ -36,29 +44,25 @@ export default function StartingCashForm({ locations, onAssigned }: Props) {
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto p-6 space-y-4 bg-white rounded shadow">
       <h2 className="text-xl font-bold">Assegna Fondocassa</h2>
-      <div className="flex flex-col space-y-2">
-        <label className="font-medium">Scegli Postazione</label>
-        <select
-          className="border border-gray-300 p-2 rounded"
-          value={selectedLocation}
-          onChange={e => setSelectedLocation(Number(e.target.value))}
-        >
-          {locations.map(loc => (
-            <option key={loc.id} value={loc.id}>{loc.name}</option>
-          ))}
-        </select>
-      </div>
+
+      <LocationDropdown
+        value={selectedLocation?.id?.toString() || ''}
+        onChange={() => {}}
+        onSelectLocation={(loc) => setSelectedLocation(loc)}
+      />
+
       <Input
         type="number"
         placeholder="Importo"
         value={amount}
-        onChange={e => setAmount(e.target.value)}
+        onChange={(e) => setAmount(e.target.value)}
         required
       />
+
       <div className="flex justify-center">
-      <Button className="bg-green-200 text-black" type="submit" disabled={loadingAssign}>
-        {loadingAssign ? 'Assigning...' : 'Assegna Fondocassa'}
-      </Button>  
+        <Button className="bg-cyan-800 text-white w-full" variant='outline' type="submit" disabled={loadingAssign}>
+          {loadingAssign ? 'Assegnando...' : 'Assegna Fondocassa'}
+        </Button>
       </div>
     </form>
   )

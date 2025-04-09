@@ -40,9 +40,19 @@ export function RecentOperationsTable({ users }: Props) {
 
   return (
     <div className="space-y-3">
-      {operations.map((op) => (
-        <OperationItem key={op.id} operation={op} getUser={getUser} />
-      ))}
+      {operations.map((op, index) => {
+        // If op.id is not available, fall back to using index
+        const uniqueKey = op.id 
+          ? `${op.id}-${op.created_at || index}` 
+          : index.toString();
+        return (
+          <OperationItem 
+            key={uniqueKey} 
+            operation={op} 
+            getUser={getUser} 
+          />
+        )
+      })}
     </div>
   )
 }

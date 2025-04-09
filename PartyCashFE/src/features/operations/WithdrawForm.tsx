@@ -58,7 +58,7 @@ export default function WithdrawForm() {
           onChange={(e) => setDescription(e.target.value)}
           required
         />
-        <Button type="submit" disabled={loading} className="w-full">
+        <Button type="submit" disabled={loading} className="w-full bg-cyan-900 text-white">
           {loading ? 'Elaborazione...' : 'Effettua Pagamento'}
         </Button>
       </form>

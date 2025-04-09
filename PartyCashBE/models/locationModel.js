@@ -1,9 +1,20 @@
 // src/models/locationModel.js
 
 function getAllLocations() {
-    return 'SELECT * FROM location ORDER BY name';
-  }
-  
+  return 'SELECT * FROM location WHERE is_active = true ORDER BY name';
+}
+
+function getAdminLocations() {
+  return 'SELECT * FROM location ORDER BY name';
+}
+
+function softDeleteLocation() {
+  return 'UPDATE location SET is_active = false WHERE id = $1 RETURNING *';
+}
+
+function reactivateLocation() {
+  return 'UPDATE location SET is_active = true WHERE id = $1 RETURNING *';
+}
   function getLocationById() {
     return 'SELECT * FROM location WHERE id = $1';
   }
@@ -25,10 +36,13 @@ function getAllLocations() {
   }
   
   module.exports = {
+    softDeleteLocation,
+    reactivateLocation,
     getAllLocations,
     getLocationById,
     insertLocation,
     updateLocation,
     deleteLocation,
-    getLocationNameById, // 👈 add here
+    getLocationNameById, 
+    getAdminLocations,
   };

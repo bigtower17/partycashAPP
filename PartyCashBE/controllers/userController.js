@@ -1,9 +1,18 @@
 // src/controllers/userController.js
 const userService = require('../services/userService');
+const { hashPassword } = require('../utils/passwordUtils');
 
 const createUser = async (req, res) => {
   try {
-    const user = await userService.createUser(req.body);
+    // Destructure and validate required fields from the request body
+    const { username, email, password, role } = req.body;
+    if (!username || !email || !password) {
+      throw new Error('Username, email, and password are required');
+    }
+    // Hash the password before storing it in the database
+    const hashedPassword = await hashPassword(password);
+    // Call the service function that creates an authentication user using the new query
+    const user = await userService.createAuthUser({ email, hashedPassword, username, role });
     res.status(201).json({ message: 'User created successfully', user });
   } catch (err) {
     console.error('Create user error:', err.message);

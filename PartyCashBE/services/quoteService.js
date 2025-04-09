@@ -22,7 +22,7 @@ async function updateQuote({ id, name, notes, amount }) {
       queries.updateQuoteById(),
       [name, notes, amountNum, id, 'pending']
     );
-    if (result.rows.length === 0) throw new Error('Quote not found or already processed');
+    if (result.rows.length === 0) throw new Error('Spesa non trovata o già pagata');
     return result.rows[0];
   });
 }
@@ -30,7 +30,7 @@ async function updateQuote({ id, name, notes, amount }) {
 async function deleteQuote(id) {
   return transaction(async (client) => {
     const result = await client.query(queries.softDeleteQuote(), [id]);
-    if (result.rows.length === 0) throw new Error('Quote not found or already deleted');
+    if (result.rows.length === 0) throw new Error('Spesa non trovata o già eliminata');
     return result.rows[0];
   });
 }
@@ -38,14 +38,14 @@ async function deleteQuote(id) {
 async function payQuote({ id, userId, locationId }) {
   return transaction(async (client) => {
     const quoteResult = await client.query(queries.lockPendingQuote(), [id, 'pending']);
-    if (quoteResult.rows.length === 0) throw new Error('Quote not found or already processed');
+    if (quoteResult.rows.length === 0) throw new Error('Spesa non trovata o già pagata');
 
     const quote = quoteResult.rows[0];
     const quoteAmount = Number(quote.amount);
 
     if (locationId) {
       const locCheck = await client.query(locationQueries.getLocationNameById(), [locationId]);
-      if (locCheck.rows.length === 0) throw new Error('Location not found');
+      if (locCheck.rows.length === 0) throw new Error('Postazione non trovata');
 
       const locationName = locCheck.rows[0].name;
 
@@ -65,7 +65,7 @@ async function payQuote({ id, userId, locationId }) {
         userId,
         'local_withdrawal',
         -Math.abs(quoteAmount),
-        `Withdrawal for quote: ${quote.name}`,
+        `Pagamento spesa da ${locationName}: ${quote.name}`,
         locationId
       ]);
 
@@ -73,7 +73,7 @@ async function payQuote({ id, userId, locationId }) {
       await client.query(queries.insertVirtualDeposit(), [
         userId,
         quoteAmount,
-        `Virtual deposit from location ${locationName} for direct payment`,
+        `Operazione scarico virtuale per pagamento diretto da ${locationName}`,
         locationId
       ]);
 

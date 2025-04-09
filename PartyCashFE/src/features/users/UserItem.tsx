@@ -1,31 +1,31 @@
-import React from 'react'
-import { User } from '@/types'
-import { Button } from '@/components/ui/button'
+import React from 'react';
+import { User } from '@/types';
+import { Button } from '@/components/ui/button';
 
 type UserItemProps = {
-  user: User
-  onDelete: (id: number) => Promise<void>
-  onUpdateRole: (id: number, role: User['role']) => Promise<void>
-  onResetPassword: (id: number, newPassword: string) => Promise<void>
-}
+  user: User;
+  onDelete: (id: number) => Promise<void>;
+  onUpdateRole: (id: number, role: User['role']) => Promise<void>;
+  onResetPassword: (id: number, newPassword: string) => Promise<void>;
+};
 
 const UserItem: React.FC<UserItemProps> = ({ user, onDelete, onUpdateRole, onResetPassword }) => {
   const handleDelete = async () => {
-    if (window.confirm(`Are you sure you want to delete "${user.username}"?`)) {
-      await onDelete(user.id)
+    if (window.confirm(`Sei sicuro di voler cancellare "${user.username}"?`)) {
+      await onDelete(user.id);
     }
-  }
+  };
 
   const handleRoleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    await onUpdateRole(user.id, e.target.value as User['role'])
-  }
+    await onUpdateRole(user.id, e.target.value as User['role']);
+  };
 
   const handleResetPassword = async () => {
-    const newPassword = window.prompt(`Enter new password for "${user.username}":`)
+    const newPassword = window.prompt(`Enter new password for "${user.username}":`);
     if (newPassword) {
-      await onResetPassword(user.id, newPassword)
+      await onResetPassword(user.id, newPassword);
     }
-  }
+  };
 
   return (
     <div className="p-4 bg-white shadow-sm rounded border-l-4 border-blue-500 hover:shadow-md transition">
@@ -35,7 +35,8 @@ const UserItem: React.FC<UserItemProps> = ({ user, onDelete, onUpdateRole, onRes
           <p className="text-sm text-gray-600">Email: {user.email}</p>
           <p className="text-sm text-gray-600">Role: {user.role}</p>
         </div>
-        <div className="space-x-2 flex-shrink-0">
+        {/* Responsive buttons section */}
+        <div className="flex flex-col items-end space-y-2 flex-shrink-0 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-2">
           <select
             value={user.role}
             onChange={handleRoleChange}
@@ -62,7 +63,7 @@ const UserItem: React.FC<UserItemProps> = ({ user, onDelete, onUpdateRole, onRes
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default UserItem
+export default UserItem;

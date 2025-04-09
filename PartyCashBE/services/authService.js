@@ -9,7 +9,7 @@ async function registerUser({ email, password, username }) {
 }
 
 async function loginUser({ login, password }) {
-  const result = await db.query(userModel.findUserByLogin(), [login]);
+  const result = await db.query(userModel.findUserByLoginQuery(), [login]);
   const user = result.rows[0];
   if (!user) throw new Error('USER_NOT_FOUND');
 

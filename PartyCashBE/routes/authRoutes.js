@@ -4,13 +4,6 @@ const authController = require('../controllers/authController');
 
 /**
  * @swagger
- * tags:
- *   - name: Authentication
- *     description: Gestione login e registrazione utenti
- */
-
-/**
- * @swagger
  * /auth/register:
  *   post:
  *     summary: Register a new user

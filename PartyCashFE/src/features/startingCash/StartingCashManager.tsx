@@ -71,7 +71,7 @@ export default function StartingCashManager() {
 
       <h2 className="text-xl font-bold mt-8 mb-2">Fondocassa rimborsati</h2>
       {reimbursed.length === 0 ? (
-        <p>No reimbursements yet.</p>
+        <p>Nessun fondocassa rimborsato</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {reimbursed.map(entry => (

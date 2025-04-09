@@ -1,3 +1,4 @@
+// src/App.tsx
 import { FC } from 'react'
 import {
   BrowserRouter as Router,
@@ -8,17 +9,26 @@ import {
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
 import ProtectedRoute from './components/ProtectedRoute'
-import DashboardPage from '@/features/dashboard/DashboardPage'
-import DepositForm from '@/features/operations/DepositForm'
-import WithdrawForm from '@/features/operations/WithdrawForm'
-import QuotesDashboard from '@/features/quotes/QuotesDashboard'
-import { LocationList } from '@/features/locations/LocationList'
-import { LocationForm } from '@/features/locations/LocationForm'
-import { LocationDashboard } from '@/features/locations/LocationsDashboard'
-import { ExportReports } from '@/features/reports/ExportReports'
-import StartingCashManager from '@/features/startingCash/StartingCashManager'
-import { UsersAdminDashboard } from '@/features/users/UsersAdminDashboard'
 import AppLayout from './AppLayout'
+import { routesConfig, RouteConfig } from './routesConfig'
+
+const generateRoutes = (routes: RouteConfig[]) => {
+  return routes.map((route) => {
+    const { path, element, allowedRoles, children } = route;
+    const wrappedElement = (
+      <ProtectedRoute allowedRoles={allowedRoles}>
+        {element}
+      </ProtectedRoute>
+    );
+    return children ? (
+      <Route key={path} path={path} element={wrappedElement}>
+        {generateRoutes(children)}
+      </Route>
+    ) : (
+      <Route key={path} path={path} element={wrappedElement} />
+    );
+  });
+};
 
 const App: FC = () => {
   return (
@@ -26,7 +36,6 @@ const App: FC = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
 
-        {/* Wrap all authenticated routes in a layout */}
         <Route
           path="/"
           element={
@@ -35,25 +44,16 @@ const App: FC = () => {
             </ProtectedRoute>
           }
         >
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="deposit" element={<DepositForm />} />
-          <Route path="withdraw" element={<WithdrawForm />} />
-          <Route path="quotes" element={<QuotesDashboard />} />
-          <Route path="locations" element={<LocationList />} />
-          <Route path="locations/:id" element={<LocationForm />} />
-          {/* Use LocationDashboard to display all location budgets */}
-          <Route path="location-budget" element={<LocationDashboard />} />
-          <Route path="export" element={<ExportReports />} />
-          <Route path="starting-cash-dashboard" element={<StartingCashManager />} />
-          <Route path="users-admin" element={<UsersAdminDashboard />} />
+          {generateRoutes(routesConfig)}
+
+          {/* Default route */}
           <Route index element={<Navigate to="/dashboard" replace />} />
-          
         </Route>
 
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
-  )
+  );
 }
 
 export default App

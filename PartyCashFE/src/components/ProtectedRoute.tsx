@@ -1,27 +1,34 @@
 // src/components/ProtectedRoute.tsx
-import { useEffect, useState } from 'react'
-import { Navigate } from 'react-router-dom'
-import { isTokenExpired } from '@/lib/token'
+import { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import { isTokenExpired, getTokenPayload } from '@/lib/token';
 
 type Props = {
-  children: React.ReactNode
-}
+  children: React.ReactNode;
+  allowedRoles?: string[];
+};
 
-export default function ProtectedRoute({ children }: Props) {
-  const [valid, setValid] = useState<boolean | null>(null)
+export default function ProtectedRoute({ children, allowedRoles }: Props) {
+  const [valid, setValid] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
 
     if (!token || isTokenExpired(token)) {
-      localStorage.removeItem('token')
-      setValid(false)
+      localStorage.removeItem('token');
+      setValid(false);
     } else {
-      setValid(true)
+      const payload = getTokenPayload(token);
+      // If allowedRoles is provided, ensure the user's role is allowed.
+      if (allowedRoles && allowedRoles.length > 0) {
+        setValid(allowedRoles.includes(payload.role));
+      } else {
+        setValid(true);
+      }
     }
-  }, [])
+  }, [allowedRoles]);
 
-  if (valid === null) return null // or a spinner
+  if (valid === null) return null; // Optionally render a loader here
 
-  return valid ? <>{children}</> : <Navigate to="/login" replace />
+  return valid ? <>{children}</> : <Navigate to="/login" replace />;
 }

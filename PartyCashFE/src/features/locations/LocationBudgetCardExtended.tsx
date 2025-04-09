@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import {
   Card,
   CardHeader,
@@ -56,19 +56,15 @@ export function LocationBudgetCardExtended({
     <Card className="rounded-2xl shadow-sm hover:shadow-md transition">
       <CardHeader className="pb-2 space-y-1">
         <CardTitle className="text-base font-semibold">{location.name}</CardTitle>
-        {hasPendingCash && (
-          <Badge variant="outline">
-            Fondocassa da recuperare: {formatEuro(pendingStartingCashAmount)}
-          </Badge>
-        )}
+        
       </CardHeader>
-      <CardContent className="space-y-2 text-sm text-muted-foreground">
+      <CardContent className="space-y-2 text-sm text-muted-foreground min-h-[200px]">
         <div className="flex justify-between">
-          <span>Lordo</span>
+          <span>Totale Incasso sviluppato</span>
           <span className="text-gray-900 font-medium">{formatEuro(gross)}</span>
         </div>
         <div className="flex justify-between text-base font-semibold text-black">
-          <span>Netto</span>
+          <span>Incasso trasferito a Cassa Centrale</span>
           <span>{formatEuro(netBalance)}</span>
         </div>
         <div className="text-xs text-gray-400 pt-2 border-t mt-3">
@@ -78,7 +74,11 @@ export function LocationBudgetCardExtended({
         <Button variant="outline" onClick={() => setExpanded(!expanded)}>
           {expanded ? 'Nascondi operazioni' : 'Vedi operazioni'}
         </Button>
-
+        {hasPendingCash && (
+          <Badge className="bg-yellow-300" variant="outline">
+            Fondocassa da recuperare: {formatEuro(pendingStartingCashAmount)}
+          </Badge>
+        )}
         {expanded && (
           <div className="mt-2">
             {opsLoading && <p>Caricamento operazioni...</p>}
@@ -98,16 +98,21 @@ export function LocationBudgetCardExtended({
                   const style = operationStyleMap[op.type] ?? fallback
 
                   return (
-                    <li key={op.id} className="border-b pb-1">
-                      <span className={`text-xs px-2 py-0.5 rounded-full mr-2 ${style.badge}`}>
-                        {style.label}
-                      </span>
-                      <span className={`${style.text}`}>
-                        {style.prefix}
-                        {formatEuro(Number(op.amount))}
-                      </span>{' '}
-                      <span className="text-xs text-gray-500">– {op.description}</span>
-                    </li>
+                    <li key={op.id} className="border-b pb-2">
+{/* Label in una riga separata */}
+<div className={`inline-block text-xs px-2 py-0.5 rounded-full mb-1 ${style.badge}`}>
+          {style.label}
+        </div>
+
+        {/* Riga principale con importo e descrizione */}
+        <div className="flex items-center justify-between">
+          <span className={`${style.text}`}>
+            {formatEuro(Number(op.amount))}
+          </span>
+          <span className="text-xs text-gray-500 ml-2"> {op.description}</span>
+        </div>
+        
+      </li>
                   )
                 })}
               </ul>

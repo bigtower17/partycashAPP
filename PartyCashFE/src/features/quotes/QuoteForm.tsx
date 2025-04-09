@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import api from '@/lib/api'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 type Props = {
   onQuoteCreated: () => void
@@ -7,9 +9,12 @@ type Props = {
 
 export default function QuoteForm({ onQuoteCreated }: Props) {
   const [form, setForm] = useState({ name: '', notes: '', amount: '' })
+  const [loading, setLoading] = useState(false)
 
-  const handleCreate = async () => {
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault()
     if (!form.name || !form.amount) return
+    setLoading(true)
     try {
       await api.post('/quotes', {
         name: form.name,
@@ -20,36 +25,44 @@ export default function QuoteForm({ onQuoteCreated }: Props) {
       onQuoteCreated()
     } catch (err) {
       console.error('Errore creazione spesa:', err)
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div className="bg-white p-4 shadow rounded-md space-y-3">
-      <input
-        className="border p-2 rounded w-full"
+    <form 
+      onSubmit={handleCreate} 
+      className="max-w-md mx-auto mt-10 space-y-4 bg-white p-6 rounded shadow"
+    >
+      <h2 className="text-xl font-semibold">Aggiungi Spesa</h2>
+      <Input
+        type="text"
         placeholder="Nome"
         value={form.name}
-        onChange={e => setForm({ ...form, name: e.target.value })}
+        onChange={(e) => setForm({ ...form, name: e.target.value })}
+        required
       />
-      <input
-        className="border p-2 rounded w-full"
+      <Input
+        type="text"
         placeholder="Descrizione"
         value={form.notes}
-        onChange={e => setForm({ ...form, notes: e.target.value })}
+        onChange={(e) => setForm({ ...form, notes: e.target.value })}
       />
-      <input
+      <Input
         type="number"
-        className="border p-2 rounded w-full"
         placeholder="Importo"
         value={form.amount}
-        onChange={e => setForm({ ...form, amount: e.target.value })}
+        onChange={(e) => setForm({ ...form, amount: e.target.value })}
+        required
       />
-      <button
-        onClick={handleCreate}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+      <Button 
+        type="submit" 
+        disabled={loading} 
+        className="w-full bg-cyan-900 text-white"
       >
-        Aggiungi Spesa
-      </button>
-    </div>
+        {loading ? 'Creazione in corso...' : 'Aggiungi Spesa'}
+      </Button>
+    </form>
   )
 }

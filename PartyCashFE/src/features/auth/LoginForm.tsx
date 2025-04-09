@@ -17,7 +17,7 @@ export default function LoginForm() {
     <form onSubmit={submit} className="max-w-sm mx-auto mt-20 space-y-4">
       <div className="space-y-1">
         <label htmlFor="login" className="text-sm font-medium">
-          Email or Username
+          Email o Username
         </label>
         <Input
           id="login"
@@ -40,9 +40,12 @@ export default function LoginForm() {
         />
       </div>
       {error && <p className="text-red-500 text-sm">{error}</p>}
-      <Button type="submit" disabled={loading}>
-        {loading ? 'Logging in...' : 'Login'}
-      </Button>
+      <div className="flex justify-center">
+  <Button className="bg-cyan-900 text-white" type="submit" disabled={loading}>
+    {loading ? 'Logging in...' : 'Login'}
+  </Button>
+</div>
+
     </form>
   )
 }

@@ -10,7 +10,7 @@ export default function OperationAmount({ amount, type }: Props) {
   const absAmount = Math.abs(amount)
   const style = operationStyleMap[type as keyof typeof operationStyleMap]
 
-  const prefix = style?.prefix || ''
+  const prefix = amount >= 0 ? '+' : '-' // determine from value
   const textClass = style?.text || 'text-gray-700 font-medium'
 
   return (

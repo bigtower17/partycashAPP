@@ -37,7 +37,7 @@ export function useQuoteActions(quote: Quote, onUpdated: () => void) {
   }
 
   const handleDelete = async () => {
-    const confirmDelete = window.confirm(`Are you sure you want to delete "${quote.name}"?`)
+    const confirmDelete = window.confirm(`Sei sicuro di voler eliminare la spesa "${quote.name}"?`)
     if (!confirmDelete) return
     try {
       await api.delete(`/quotes/${quote.id}`)

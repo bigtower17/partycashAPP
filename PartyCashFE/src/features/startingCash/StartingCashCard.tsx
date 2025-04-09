@@ -46,7 +46,7 @@ export default function StartingCashCard({ entry, locations, onReimburse, proces
 
         {!isReimbursed && (
           <div className="mt-2">
-            <Button className="bg-red-200" variant="outline" size="sm" onClick={() => onReimburse(entry.id)} disabled={processing}>
+            <Button className="w-full bg-cyan-900 text-white" variant="outline" size="sm" onClick={() => onReimburse(entry.id)} disabled={processing}>
               {processing ? 'Processing...' : 'Rimborsa'}
             </Button>
           </div>

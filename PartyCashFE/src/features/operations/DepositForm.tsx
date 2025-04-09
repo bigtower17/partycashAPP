@@ -66,7 +66,7 @@ export default function DepositForm() {
           setSelectedLocationName(location ? location.name : '')
         }}
       />
-      <Button type="submit" disabled={loading} className="w-full">
+      <Button variant='outline' type="submit" disabled={loading} className="w-full bg-cyan-900 text-white">
         {loading ? 'Processing...' : 'Effettua Scarico'}
       </Button>
     </form>

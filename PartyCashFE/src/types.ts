@@ -14,12 +14,15 @@ export type Operation = {
   user_id: number
   location_id?: number  // optional, returned by with-location endpoint
   location_name?: string
+  
 }
 
 
 export type Location = {
   id: number
   name: string
+  is_active: boolean
+
 }
 
 export type LocationBudgetData = {
@@ -57,3 +60,10 @@ export type Quote = {
   location_name: string
 }
 
+export interface CustomJwtPayload {
+  id: number
+  email: string
+  role: 'admin' | 'auditor' | 'user' // personalizza se hai più ruoli
+  iat: number
+  exp: number
+}

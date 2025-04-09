@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react'
 import api from '@/lib/api'
-
-type Location = {
-  id: number
-  name: string
-}
+import { Location } from '@/types' // ✅ Usa il tipo globale definito nel progetto
 
 type LocationDropdownProps = {
   value: string

@@ -13,7 +13,8 @@ export function LocationBudgetDashboard() {
 
   const [startingCashEntries, setStartingCashEntries] = useState<StartingCash[]>([]);
 
-  const loading = locLoading || budgetLoading || grossLoading;
+  // Se l'array delle locations è vuoto, ignoro il loading degli altri hook
+  const loading = locLoading || (locations.length > 0 ? (budgetLoading || grossLoading) : false);
   const error = locError || budgetError || grossError;
 
   useEffect(() => {
@@ -42,24 +43,29 @@ export function LocationBudgetDashboard() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       <h1 className="text-2xl font-bold mb-4">Performance Postazioni</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {locationsWithBudget.map((loc) => {
-          const budgetData = budgets[loc.id];
-          const gross = grossBudgets[loc.id] || 0;
-          return (
-            <LocationBudgetCard
-              key={loc.id}
-              location={loc}
-              budgetData={budgetData}
-              gross={gross}
-              pendingStartingCashAmount={getPendingStartingCashAmount(loc.id)}
-            />
-
-          );
-        })}
-      </div>
+      {locationsWithBudget.length === 0 ? (
+        <p className="text-gray-500 text-sm mt-4">
+          Nessuna postazione con budget trovata.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {locationsWithBudget.map((loc) => {
+            const budgetData = budgets[loc.id];
+            const gross = grossBudgets[loc.id] || 0;
+            return (
+              <LocationBudgetCard
+                key={loc.id}
+                location={loc}
+                budgetData={budgetData}
+                gross={gross}
+                pendingStartingCashAmount={getPendingStartingCashAmount(loc.id)}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

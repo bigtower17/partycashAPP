@@ -31,6 +31,42 @@ router.get('/', authenticateJWT, checkRole('admin'), userController.getAllUsers)
 
 /**
  * @swagger
+ * /users:
+ *   post:
+ *     summary: Create a new user
+ *     tags:
+ *       - Users
+ *     description: Creates a new user (admin only)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [admin, staff, auditor]
+ *     responses:
+ *       201:
+ *         description: User created successfully.
+ *       400:
+ *         description: Bad request.
+ *       403:
+ *         description: Forbidden.
+ */
+router.post('/', authenticateJWT, checkRole('admin'), userController.createUser);
+
+/**
+ * @swagger
  * /users/{id}:
  *   get:
  *     summary: Get user by ID
@@ -135,6 +171,7 @@ router.patch('/:id/role', authenticateJWT, checkRole('admin'), userController.up
  *         description: User not found
  */
 router.delete('/:id', authenticateJWT, checkRole('admin'), userController.deleteUser);
+
 /**
  * @swagger
  * /users/{id}/password:

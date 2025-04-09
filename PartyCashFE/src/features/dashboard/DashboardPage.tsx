@@ -37,11 +37,11 @@ export default function DashboardPage() {
       <QuickActions />
 
       {/* 💡 Color Legend for Operations */}
-      <div className="space-x-2 border rounded-md px-2 py-2  shadow-sm">
+      <div className="space-x-2 border rounded-2xl px-6 py-2  shadow-sm ">
         <h2 className="text-lg font-semibold mb-2">Legenda Operazioni</h2>
-        <div className="flex flex-wrap gap-4 ">
+        <div className="flex flex-wrap gap-4 justify-center">
           {operationLegend.map(({ label, color }) => (
-            <div key={label} className="flex items-center space-x-2">
+            <div key={label} className="flex items-center space-x-2 ">
               <span className={`w-4 h-4 rounded-full ${color}`} />
               <span className="text-sm text-muted-foreground">{label}</span>
             </div>

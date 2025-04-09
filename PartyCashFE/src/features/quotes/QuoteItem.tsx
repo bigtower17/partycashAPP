@@ -32,13 +32,16 @@ export default function QuoteItem({ quote, onUpdated, getUser, locations = [] }:
         <div className="space-x-2 flex-shrink-0">
           {quote.status !== 'paid' && (
             <QuoteControls
-              locations={locations}
-              paymentSource={paymentSource}
-              onPay={handlePay}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onSourceChange={handlePaymentSourceChange}
-            />
+            locations={locations}
+            paymentSource={paymentSource}
+            onPay={handlePay}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onSourceChange={(val: "shared" | number) => {
+              // Convert number values to string, keep "shared" as is
+              handlePaymentSourceChange(val === "shared" ? val : val.toString());
+            }}
+          />
           )}
         </div>
       </div>

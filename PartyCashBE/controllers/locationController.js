@@ -10,6 +10,15 @@ const getLocations = async (_req, res) => {
     res.status(500).send('Error fetching locations')
   }
 }
+const getAdminLocations = async (_req, res) => {
+  try {
+    const data = await locationService.getAdminLocations()
+    res.json(data)
+  } catch (error) {
+    console.error('Error fetching locations:', error)
+    res.status(500).send('Error fetching locations')
+  }
+}
 
 const createLocation = async (req, res) => {
   const { name } = req.body
@@ -68,10 +77,37 @@ const deleteLocation = async (req, res) => {
   }
 }
 
+const softDeleteLocation = async (req, res) => {
+  const { id } = req.params
+  try {
+    const deleted = await locationService.softDeleteLocation(id)
+    if (!deleted) return res.status(404).json({ message: 'Location not found' })
+    res.json({ message: 'Location deleted successfully' })
+  } catch (error) {
+    console.error('Error deleting location:', error)
+    res.status(500).send('Error deleting location')
+  }
+}
+
+const reactivateLocation = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await locationService.reactivateLocation(id);
+    if (!result) return res.status(404).json({ message: 'Location non trovata' });
+    res.json({ message: 'Location riattivata', location: result });
+  } catch (err) {
+    console.error('Errore riattivazione:', err);
+    res.status(500).send('Errore riattivazione');
+  }
+};
+
 module.exports = {
+  softDeleteLocation,
+  reactivateLocation,
   getLocations,
   createLocation,
   getLocationById,
   updateLocation,
   deleteLocation,
+  getAdminLocations,
 }

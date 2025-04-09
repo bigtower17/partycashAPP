@@ -1,5 +1,8 @@
 import { Location } from '@/types'
 import { Banknote } from 'lucide-react'
+import { Button } from '@/components/ui/button'  // Assuming this one works
+// Temporarily use the native select elements instead of shadcn/ui/select
+// import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
 
 type Props = {
   locations: Location[]
@@ -10,16 +13,10 @@ type Props = {
   onDelete: () => void
 }
 
-export function QuoteControls({
-  locations,
-  paymentSource,
-  onSourceChange,
-  onPay,
-  onEdit,
-  onDelete
-}: Props) {
+export function QuoteControls({ locations, paymentSource, onSourceChange, onPay, onEdit, onDelete }: Props) {
   return (
     <div className="flex flex-col gap-2">
+      {/* Native select fallback */}
       <select
         value={paymentSource.toString()}
         onChange={(e) => {
@@ -36,27 +33,21 @@ export function QuoteControls({
         ))}
       </select>
 
-      <button
+      <Button
         onClick={onPay}
         className="text-sm px-3 py-1 rounded bg-green-100 text-green-800 hover:bg-green-200"
       >
         <Banknote size={14} className="inline-block mr-1" />
         Paga
-      </button>
+      </Button>
 
       <div className="flex gap-2">
-        <button
-          onClick={onEdit}
-          className="text-sm bg-yellow-100 text-yellow-800 px-3 py-1 rounded hover:bg-yellow-200"
-        >
+        <Button onClick={onEdit} className="text-sm bg-yellow-100 text-yellow-800 px-3 py-1 rounded hover:bg-yellow-200">
           Modifica
-        </button>
-        <button
-          onClick={onDelete}
-          className="text-sm bg-red-100 text-red-800 px-3 py-1 rounded hover:bg-red-200"
-        >
+        </Button>
+        <Button onClick={onDelete} className="text-sm bg-red-100 text-red-800 px-3 py-1 rounded hover:bg-red-200">
           Elimina
-        </button>
+        </Button>
       </div>
     </div>
   )

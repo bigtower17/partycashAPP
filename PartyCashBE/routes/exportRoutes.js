@@ -94,13 +94,7 @@ router.get('/locations/pdf', validateSignedToken, exportLocationReportPDF) // âœ
 router.get('/locations/csv', validateSignedToken, exportLocationReportCSV);
 
 
-/**
- * @swagger
- * /export/operations/csv:
- *   get:
- *     summary: Esporta le operazioni in formato CSV
- *     ...
- */
+
 router.post('/generate-url', authenticateJWT, checkRole('admin', 'auditor'), generateExportUrl);
 
 module.exports = router;
