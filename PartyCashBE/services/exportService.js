@@ -72,7 +72,7 @@ async function generateExportUrl(report, type) {
   }
 
   const token = generateSignedUrlToken({ report, type });
-  const url = `${process.env.BASE_URL || 'http://localhost:3000'}/export/${report}/${type}?token=${token}`;
+  const url = `${process.env.BASE_URL || 'http://54.227.24.137:3000'}/export/${report}/${type}?token=${token}`;
 
   return url;
 }
