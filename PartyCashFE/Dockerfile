@@ -1,5 +1,5 @@
 # Step 1: Costruzione dell'app
-FROM node:16-alpine as build
+FROM node:18-alpine
 
 WORKDIR /app
 
