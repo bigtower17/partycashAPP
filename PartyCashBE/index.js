@@ -9,7 +9,7 @@ const quoteRoutes = require('./routes/quoteRoutes');
 const userRoutes = require('./routes/userRoutes');
 const locationRoutes = require('./routes/locationRoutes');
 const locationBudgetRoutes = require('./routes/locationBudgetRoutes');
-const startingCashRoutes = require('./routes/startingCashRoutes'); // ✅ NEW
+const startingCashRoutes = require('./routes/startingCashRoutes');
 const exportRoutes = require('./routes/exportRoutes');
 const initializeRoutes = require('./routes/initializeRoutes');
 
@@ -20,31 +20,35 @@ const path = require("path");
 dotenv.config();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: 'https://partycash.me', // Allow requests from your frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Authorization', 'Content-Type'],
+}));
 setupSwagger(app);
 
-// API Routes
-app.use('/auth', authRoutes);
-app.use('/operations', operationRoutes);
-app.use('/budget', balanceRoutes);
-app.use('/quotes', quoteRoutes);
-app.use('/users', userRoutes);
-app.use('/locations', locationRoutes);
-app.use('/location-budget', locationBudgetRoutes);
-app.use('/starting-cash', startingCashRoutes); // ✅ NEW
-app.use('/export', exportRoutes);
-app.use('/admin', initializeRoutes); // ora POST /admin/reset-db è disponibile
+// API Routes with /api/ prefix
+app.use('/api/auth', authRoutes);
+app.use('/api/operations', operationRoutes);
+app.use('/api/budget', balanceRoutes);
+app.use('/api/quotes', quoteRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/locations', locationRoutes);
+app.use('/api/location-budget', locationBudgetRoutes);
+app.use('/api/starting-cash', startingCashRoutes);
+app.use('/api/export', exportRoutes);
+app.use('/api/admin', initializeRoutes);
 
 // Debug logs
-console.log("Auth Routes loaded at /auth");
-console.log("Operation Routes loaded at /operations");
-console.log("Balance Routes loaded at /budget");
-console.log("Quote Routes loaded at /quotes");
-console.log("User Routes loaded at /users");
-console.log("Location Routes loaded at /locations");
-console.log("Location Budget Routes loaded at /location-budget");
-console.log("Starting Cash Routes loaded at /starting-cash");
-console.log("Export Routes loaded at /export");
+console.log("Auth Routes loaded at /api/auth");
+console.log("Operation Routes loaded at /api/operations");
+console.log("Balance Routes loaded at /api/budget");
+console.log("Quote Routes loaded at /api/quotes");
+console.log("User Routes loaded at /api/users");
+console.log("Location Routes loaded at /api/locations");
+console.log("Location Budget Routes loaded at /api/location-budget");
+console.log("Starting Cash Routes loaded at /api/starting-cash");
+console.log("Export Routes loaded at /api/export");
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
