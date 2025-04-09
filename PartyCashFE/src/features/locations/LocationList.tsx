@@ -17,13 +17,12 @@ export function LocationList() {
   const [locations, setLocations] = useState<Location[]>([])
   const [loading, setLoading] = useState(true)
 
-  // Recupero le locations
   useEffect(() => {
-    if (!user) return // aspetta che l'utente sia pronto
-  
+    if (!user) return
+
     const endpoint = isAdmin ? '/locations/all' : '/locations'
     setLoading(true)
-  
+
     api
       .get(endpoint)
       .then((res) => setLocations(res.data))
@@ -31,13 +30,15 @@ export function LocationList() {
       .finally(() => setLoading(false))
   }, [user, isAdmin])
 
-  // Hook per recuperare i budget: restituisce un oggetto in cui la chiave è l'ID della location
-  const { budgets, loading: budgetLoading, error: budgetError } = useLocationBudgets(locations)
+  const {
+    budgets,
+    loading: budgetLoading,
+    error: budgetError,
+    refetch, // 👈 usiamo refetch
+  } = useLocationBudgets(locations)
 
-  // Only consider budgetLoading if there are locations (otherwise treat it as done)
-  const budgetsLoading = locations.length > 0 ? budgetLoading : false;
+  const budgetsLoading = locations.length > 0 ? budgetLoading : false
 
-  // Funzione per inizializzare una postazione (crea la linea nella tabella location_budget)
   const handleInitialize = async (id: number) => {
     if (!user?.id) return
     try {
@@ -47,6 +48,7 @@ export function LocationList() {
         amount: 0,
         init: true,
       })
+      await refetch() // 👈 aggiorna i budget dal server
       alert('Postazione inizializzata')
     } catch (err) {
       console.error(err)
@@ -97,7 +99,6 @@ export function LocationList() {
     }
   }
 
-  // Gestione del caricamento combinato (locations e budget)
   if (loading || budgetsLoading) return <p>Caricamento postazioni...</p>
   if (budgetError) return <p>Errore: {budgetError}</p>
 
@@ -106,7 +107,6 @@ export function LocationList() {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header con titolo e pulsante "Aggiungi Postazione" */}
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold">Gestione Postazioni</h2>
         <Button
@@ -121,7 +121,6 @@ export function LocationList() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Colonna postazioni attive */}
         <div>
           <h3 className="text-lg font-semibold mb-2">Postazioni Attive</h3>
           {activeLocations.map((loc) => (
@@ -133,12 +132,8 @@ export function LocationList() {
                 <Button variant="outline" onClick={() => navigate(`/locations/${loc.id}`)}>
                   Rinomina
                 </Button>
-                {/* Mostra il pulsante "Inizializza" solo se non esiste una linea di budget per la postazione */}
                 {!budgets[loc.id] && (
-                  <Button
-                    variant="outline"
-                    onClick={() => handleInitialize(loc.id)}
-                  >
+                  <Button variant="outline" onClick={() => handleInitialize(loc.id)}>
                     Inizializza
                   </Button>
                 )}
@@ -159,7 +154,6 @@ export function LocationList() {
           ))}
         </div>
 
-        {/* Colonna postazioni disattivate */}
         <div>
           <h3 className="text-lg font-semibold mb-2">Postazioni Disattivate</h3>
           {inactiveLocations.length === 0 ? (
@@ -193,5 +187,5 @@ export function LocationList() {
         </div>
       </div>
     </div>
-  );
+  )
 }
