@@ -126,66 +126,62 @@ export function LocationList() {
         <div>
           <h3 className="text-lg font-semibold mb-2">Postazioni Attive</h3>
           {activeLocations.map((loc) => (
-            <Card key={loc.id}>
-              <CardHeader>
-                <CardTitle>{loc.name}</CardTitle>
-              </CardHeader>
-              <CardContent className="flex gap-2 flex-wrap">
-                <Button variant="outline" onClick={() => navigate(`/locations/${loc.id}`)}>
-                  Rinomina
-                </Button>
-                {!budgets[loc.id] && budgetRefreshFlag >= 0 && ( // 👈 assicura che reagisca al cambiamento
-                  <Button variant="outline" onClick={() => handleInitialize(loc.id)}>
-                    Inizializza
-                  </Button>
-                )}
-                <Button
-                  className="bg-yellow-600 text-white hover:bg-yellow-700"
-                  onClick={() => handleDeactivate(loc.id)}
-                >
-                  Disattiva
-                </Button>
-                <Button
-                  className="bg-red-600 text-white hover:bg-red-700"
-                  onClick={() => handleDelete(loc.id)}
-                >
-                  Elimina
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+  <Card key={loc.id} className="mb-4"> {/* 👈 aggiunto margine */}
+    <CardHeader>
+      <CardTitle>{loc.name}</CardTitle>
+    </CardHeader>
+    <CardContent className="flex gap-2 flex-wrap">
+      <Button variant="outline" onClick={() => navigate(`/locations/${loc.id}`)}>
+        Rinomina
+      </Button>
+      {!budgets[loc.id] && budgetRefreshFlag >= 0 && (
+        <Button variant="outline" onClick={() => handleInitialize(loc.id)}>
+          Inizializza
+        </Button>
+      )}
+      <Button
+        className="bg-yellow-600 text-white hover:bg-yellow-700"
+        onClick={() => handleDeactivate(loc.id)}
+      >
+        Disattiva
+      </Button>
+      <Button
+        className="bg-red-600 text-white hover:bg-red-700"
+        onClick={() => handleDelete(loc.id)}
+      >
+        Elimina
+      </Button>
+    </CardContent>
+  </Card>
+))}
         </div>
 
         <div>
           <h3 className="text-lg font-semibold mb-2">Postazioni Disattivate</h3>
-          {inactiveLocations.length === 0 ? (
-            <p className="text-sm text-gray-500">Nessuna postazione disattivata</p>
-          ) : (
-            inactiveLocations.map((loc) => (
-              <Card key={loc.id} className="opacity-60">
-                <CardHeader className="flex justify-between items-center">
-                  <CardTitle>{loc.name}</CardTitle>
-                  <Badge variant="outline" className="text-red-600 border-red-600">
-                    Disattivata
-                  </Badge>
-                </CardHeader>
-                <CardContent className="flex gap-2 flex-wrap">
-                  <Button
-                    className="bg-green-600 text-white hover:bg-green-700"
-                    onClick={() => handleReactivate(loc.id)}
-                  >
-                    Riattiva
-                  </Button>
-                  <Button
-                    className="bg-red-600 text-white hover:bg-red-700"
-                    onClick={() => handleDelete(loc.id)}
-                  >
-                    Elimina
-                  </Button>
-                </CardContent>
-              </Card>
-            ))
-          )}
+          {inactiveLocations.map((loc) => (
+  <Card key={loc.id} className="opacity-60 mb-4"> {/* 👈 aggiunto margine */}
+    <CardHeader className="flex justify-between items-center">
+      <CardTitle>{loc.name}</CardTitle>
+      <Badge variant="outline" className="text-red-600 border-red-600">
+        Disattivata
+      </Badge>
+    </CardHeader>
+    <CardContent className="flex gap-2 flex-wrap">
+      <Button
+        className="bg-green-600 text-white hover:bg-green-700"
+        onClick={() => handleReactivate(loc.id)}
+      >
+        Riattiva
+      </Button>
+      <Button
+        className="bg-red-600 text-white hover:bg-red-700"
+        onClick={() => handleDelete(loc.id)}
+      >
+        Elimina
+      </Button>
+    </CardContent>
+  </Card>
+))}
         </div>
       </div>
     </div>
