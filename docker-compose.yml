@@ -51,9 +51,8 @@ services:
     image: nginx:alpine
     container_name: reverse_proxy
     volumes:
-    - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    # Se hai usato Certbot per ottenere i certificati e li vuoi montare:
-    - ./nginx/ssl:/etc/letsencrypt/live/partycash.me:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+
     ports:
     - "80:80"
     - "443:443"
