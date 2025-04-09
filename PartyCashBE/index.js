@@ -20,7 +20,7 @@ const cors = require('cors');
 const path = require("path");
 
 dotenv.config();
-
+const DOMAIN_NAME = process.env.DOMAIN_NAME; 
 app.use(express.json());
 app.use(cors({
   origin: [`https://${DOMAIN_NAME}`],
