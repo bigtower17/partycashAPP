@@ -10,7 +10,7 @@ type Props = {
   onAssigned: () => void
 }
 
-export default function StartingCashForm({ locations, onAssigned }: Props) {
+export default function StartingCashForm({ onAssigned }: Props) {
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null)
   const [amount, setAmount] = useState('')
   const [loadingAssign, setLoadingAssign] = useState(false)
