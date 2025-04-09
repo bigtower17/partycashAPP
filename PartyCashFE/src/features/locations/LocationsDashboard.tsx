@@ -4,16 +4,11 @@ import { useLocationBudgets } from '@/hooks/useLocationBudget'
 import { useGrossBudgets } from '@/hooks/useGrossBudgets'
 import { LocationBudgetCardExtended } from '../locations/LocationBudgetCardExtended'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { useNavigate, useLocation as useRouterLocation } from 'react-router-dom'
 import api from '@/lib/api'
-import { useAuth } from '@/hooks/useAuth'
 import { StartingCash } from '@/types'
 
 export function LocationDashboard() {
-  const { user } = useAuth()
-  const navigate = useNavigate()
-  const routerLocation = useRouterLocation() // Importato con alias
-
+  
   const { locations, loading: locLoading, error: locError } = useLocations()
   const [locationsLoaded, setLocationsLoaded] = useState(false)
 
@@ -90,6 +85,7 @@ export function LocationDashboard() {
             const pendingAmount = pendingCashMap[loc.id] || 0
 
             return (
+              
               <div key={loc.id}>
                 {budgetData ? (
                   <LocationBudgetCardExtended

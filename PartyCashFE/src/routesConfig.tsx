@@ -1,4 +1,3 @@
-import React from 'react';
 import DashboardPage from '@/features/dashboard/DashboardPage';
 import DepositForm from '@/features/operations/DepositForm';
 import WithdrawForm from '@/features/operations/WithdrawForm';
@@ -10,6 +9,7 @@ import { ExportReports } from '@/features/reports/ExportReports';
 import StartingCashManager from '@/features/startingCash/StartingCashManager';
 import { UsersAdminDashboard } from '@/features/users/UsersAdminDashboard';
 import NewUserForm from '@/features/users/NewUserForm';
+import { JSX } from 'react/jsx-runtime';
 
 export interface RouteConfig {
   path: string;

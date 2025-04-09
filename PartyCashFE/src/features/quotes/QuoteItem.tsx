@@ -1,6 +1,5 @@
 import { Quote, Location } from '@/types'
 import { useQuoteActions } from '@/hooks/useQuoteActions'
-import { formatDate, formatEuro } from '@/utils/format'
 import { QuoteHeader } from './QuoteItemHeader'
 import { QuoteMeta } from './QuoteItemMeta'
 import { QuoteControls } from './QuoteItemControls'
