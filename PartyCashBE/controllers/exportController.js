@@ -90,7 +90,7 @@ const generateExportUrl = (req, res) => {
   }
 
   const token = generateSignedExportToken({ report, type });
-  const url = `${process.env.BASE_URL || 'https://partycash.me'}/export/${report}/${type}?token=${token}`;
+  const url = `${process.env.BASE_URL || 'https://partycash.me'}/api/export/${report}/${type}?token=${token}`;
 
   return res.json({ url });
 };

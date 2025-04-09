@@ -72,7 +72,7 @@ async function generateExportUrl(report, type) {
   }
 
   const token = generateSignedUrlToken({ report, type });
-  const url = `${process.env.BASE_URL || 'https://partycash.me'}/export/${report}/${type}?token=${token}`;
+  const url = `${process.env.BASE_URL || 'https://partycash.me'}/api/export/${report}/${type}?token=${token}`;
 
   return url;
 }
