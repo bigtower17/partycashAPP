@@ -21,9 +21,9 @@ async function fetchLocationReportData() {
     const locationId = loc.id;
 
     const [startingCashRes, incassoRes, opsRes] = await Promise.all([
-      pool.query(queries.getStartingCashTotal, [locationId]),
-      pool.query(queries.getLocationBudget, [locationId]),
-      pool.query(queries.getOperationsCount, [locationId]),
+      pool.query(queries.getStartingCashTotal(), [locationId]),
+      pool.query(queries.getLocationBudget(), [locationId]),
+      pool.query(queries.getOperationsCount(), [locationId]),
     ]);
 
     reportData.push({
