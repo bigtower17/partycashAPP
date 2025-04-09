@@ -50,6 +50,14 @@ const exportOperationsPDF = async (req, res) => {
 const exportLocationReportCSV = async (req, res) => {
   try {
     const records = await fetchLocationReportData();
+
+    // Log per debug (opzionale)
+    console.log('CSV location report data:', records);
+
+    if (!records || records.length === 0) {
+      return res.status(204).send("Nessun dato disponibile per l'esportazione.");
+    }
+
     const csv = generateLocationReportCSV(records);
 
     res.setHeader('Content-Type', 'text/csv');
@@ -57,9 +65,10 @@ const exportLocationReportCSV = async (req, res) => {
     res.status(200).send(csv);
   } catch (error) {
     console.error('Errore esportazione report location CSV:', error);
-    res.status(500).send("Errore durante l'esportazione");
+    res.status(500).send("Errore durante l'esportazione del report location in formato CSV.");
   }
 };
+
 
 const exportLocationReportPDF = async (req, res) => {
   try {
@@ -73,7 +82,7 @@ const exportLocationReportPDF = async (req, res) => {
     renderLocationReportPDF(doc, locationData);
 
     doc.end();
-    
+
   } catch (error) {
     console.error('Errore esportazione report location PDF:', error);
     res.status(500).send("Errore durante l'esportazione PDF");
