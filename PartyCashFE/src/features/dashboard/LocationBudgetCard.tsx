@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Location, LocationBudgetData } from '@/types';
 import { formatEuro, formatDate } from '@/utils/format';
@@ -38,7 +37,7 @@ export function LocationBudgetCard({
         <div className="text-xs text-gray-400 pt-2 border-t mt-3">
           Ultimo aggiornamento: {formatDate(budgetData.updated_at)}
         </div>
-        <div className='flex justify-center tm-2'>
+        <div className='flex justify-center '>
         {hasPendingCash && (
           <Badge className="bg-yellow-300" variant="outline">
             Fondocassa da recuperare: {formatEuro(pendingStartingCashAmount)}

@@ -12,6 +12,9 @@
     "baseUrl": ".",
     "jsx": "react-jsx",
     "types": ["react", "react-dom"],
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+
 
 
     "paths": {
