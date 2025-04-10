@@ -1,28 +1,31 @@
-# Step 1: Costruzione dell'app
+# Step 1: Build dell'app
 FROM node:18-alpine AS build
 
 WORKDIR /app
 
-# Copia i file di configurazione e installa le dipendenze
+# Build arg per selezionare il config
+ARG CONFIG_FILE=staging.config.ts
+
+# Copia package e installa deps
 COPY package*.json ./
 RUN npm install
 
-# Copia il resto del codice
+# Copia tutto il codice
 COPY . .
 
-# Esegui il build dell’applicazione
+# Sovrascrivi config.ts con quello scelto
+COPY config/${CONFIG_FILE} ./src/config.ts
+
+# Build app
 RUN npm run build
 
-# Step 2: Servire il contenuto statico con Nginx
+# Step 2: Serve statico con nginx
 FROM nginx:alpine
 
-# Copia i file buildati dal primo stage
+# Copia file statici da build
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Crea un file di configurazione Nginx personalizzato
+# Copia conf Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Espone la porta 80
 EXPOSE 80
-
-# Il container nginx si avvierà in automatico
