@@ -18,27 +18,35 @@ jobs:
         id: vars
         run: |
           branch="${GITHUB_REF##*/}"
-
+          
           if [ "$branch" = "main" ]; then
             echo "branch=main" >> $GITHUB_OUTPUT
             echo "env_name=production" >> $GITHUB_OUTPUT
             echo "compose_file=docker-compose.production.yml" >> $GITHUB_OUTPUT
-
-            # Use your production secrets
-            echo "host=${{ secrets.EC2_HOST_PROD }}" >> $GITHUB_OUTPUT
-            echo "user=${{ secrets.EC2_USER_PROD }}" >> $GITHUB_OUTPUT
-            echo "ssh_key=${{ secrets.SSH_PRIVATE_KEY_PROD }}" >> $GITHUB_OUTPUT
-
+            
+            # Sanitize production secrets
+            host=$(printf '%s' "${{ secrets.EC2_HOST_PROD }}" | tr -d '\n')
+            user=$(printf '%s' "${{ secrets.EC2_USER_PROD }}" | tr -d '\n')
+            ssh_key=$(printf '%s' "${{ secrets.SSH_PRIVATE_KEY_PROD }}" | tr -d '\n')
+            
+            echo "host=$host" >> $GITHUB_OUTPUT
+            echo "user=$user" >> $GITHUB_OUTPUT
+            echo "ssh_key=$ssh_key" >> $GITHUB_OUTPUT
           else
             echo "branch=staging" >> $GITHUB_OUTPUT
             echo "env_name=staging" >> $GITHUB_OUTPUT
             echo "compose_file=docker-compose.staging.yml" >> $GITHUB_OUTPUT
-
-            # Use your staging secrets
-            echo "host=${{ secrets.EC2_HOST }}" >> $GITHUB_OUTPUT
-            echo "user=${{ secrets.EC2_USER }}" >> $GITHUB_OUTPUT
-            echo "ssh_key=${{ secrets.SSH_PRIVATE_KEY }}" >> $GITHUB_OUTPUT
+            
+            # Sanitize staging secrets
+            host=$(printf '%s' "${{ secrets.EC2_HOST }}" | tr -d '\n')
+            user=$(printf '%s' "${{ secrets.EC2_USER }}" | tr -d '\n')
+            ssh_key=$(printf '%s' "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\n')
+            
+            echo "host=$host" >> $GITHUB_OUTPUT
+            echo "user=$user" >> $GITHUB_OUTPUT
+            echo "ssh_key=$ssh_key" >> $GITHUB_OUTPUT
           fi
+      
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
