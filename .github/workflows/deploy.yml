@@ -3,8 +3,8 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - staging
       - main
+      - staging
 
 jobs:
   deploy:
@@ -18,26 +18,38 @@ jobs:
         id: vars
         run: |
           branch="${GITHUB_REF##*/}"
+
           if [ "$branch" = "main" ]; then
+            echo "branch=main" >> $GITHUB_OUTPUT
             echo "env_name=production" >> $GITHUB_OUTPUT
             echo "compose_file=docker-compose.production.yml" >> $GITHUB_OUTPUT
-            echo "branch=main" >> $GITHUB_OUTPUT
+
+            # Use your production secrets
+            echo "host=${{ secrets.EC2_HOST_PROD }}" >> $GITHUB_OUTPUT
+            echo "user=${{ secrets.EC2_USER_PROD }}" >> $GITHUB_OUTPUT
+            echo "ssh_key=${{ secrets.SSH_PRIVATE_KEY_PROD }}" >> $GITHUB_OUTPUT
+
           else
+            echo "branch=staging" >> $GITHUB_OUTPUT
             echo "env_name=staging" >> $GITHUB_OUTPUT
             echo "compose_file=docker-compose.staging.yml" >> $GITHUB_OUTPUT
-            echo "branch=staging" >> $GITHUB_OUTPUT
+
+            # Use your staging secrets
+            echo "host=${{ secrets.EC2_HOST }}" >> $GITHUB_OUTPUT
+            echo "user=${{ secrets.EC2_USER }}" >> $GITHUB_OUTPUT
+            echo "ssh_key=${{ secrets.SSH_PRIVATE_KEY }}" >> $GITHUB_OUTPUT
           fi
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.EC2_HOST }}  # Use production secret if needed
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Use production key if separated
+          host: ${{ steps.vars.outputs.host }}
+          username: ${{ steps.vars.outputs.user }}
+          key: ${{ steps.vars.outputs.ssh_key }}
           script: |
             cd /home/ubuntu/partycashAPP
             git pull origin ${{ steps.vars.outputs.branch }}
-            # Option 1: Force a no-cache rebuild via docker compose
+
             docker compose -f docker-compose.yml -f ${{ steps.vars.outputs.compose_file }} down
             docker compose -f docker-compose.yml -f ${{ steps.vars.outputs.compose_file }} build --no-cache
             docker compose -f docker-compose.yml -f ${{ steps.vars.outputs.compose_file }} up -d
