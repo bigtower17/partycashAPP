@@ -14,29 +14,28 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Set deployment variables
+        id: vars
+        run: |
+          branch="${GITHUB_REF##*/}"
+          if [ "$branch" = "main" ]; then
+            echo "env_name=production" >> $GITHUB_OUTPUT
+            echo "compose_file=docker-compose.production.yml" >> $GITHUB_OUTPUT
+            echo "branch=main" >> $GITHUB_OUTPUT
+          else
+            echo "env_name=staging" >> $GITHUB_OUTPUT
+            echo "compose_file=docker-compose.staging.yml" >> $GITHUB_OUTPUT
+            echo "branch=staging" >> $GITHUB_OUTPUT
+          fi
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.EC2_HOST }}
+          host: ${{ secrets.EC2_HOST }}  # or use production secret if needed
           username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # or production secret if separate
           script: |
             cd /home/ubuntu/partycashAPP
-            
-            # Determina il branch e l'override file in base al branch della push
-            if [ "${GITHUB_REF##*/}" = "main" ]; then
-              echo "Deploying production..."
-              branch="main"
-              compose_file="docker-compose.production.yml"
-            else
-              echo "Deploying staging..."
-              branch="staging"
-              compose_file="docker-compose.staging.yml"
-            fi
-            
-            # Esegui il pull dal branch corretto
-            git pull origin $branch
-            
-            # Usa il file di override corretto
-            docker compose -f docker-compose.yml -f $compose_file down
-            docker compose -f docker-compose.yml -f $compose_file up -d --build
+            git pull origin ${{ steps.vars.outputs.branch }}
+            docker compose -f docker-compose.yml -f ${{ steps.vars.outputs.compose_file }} down
+            docker compose -f docker-compose.yml -f ${{ steps.vars.outputs.compose_file }} up -d --build
