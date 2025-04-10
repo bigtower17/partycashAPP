@@ -16,7 +16,7 @@ jobs:
 
       - name: Set deployment variables
         id: vars
-        env:
+        env: 
           SSH_PRIVATE_KEY_PROD: ${{ secrets.SSH_PRIVATE_KEY_PROD }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           EC2_HOST_PROD: ${{ secrets.EC2_HOST_PROD }}
