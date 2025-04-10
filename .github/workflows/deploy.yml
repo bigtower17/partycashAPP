@@ -31,11 +31,13 @@ jobs:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.EC2_HOST }}  # or use production secret if needed
+          host: ${{ secrets.EC2_HOST }}  # Use production secret if needed
           username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}  # or production secret if separate
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Use production key if separated
           script: |
             cd /home/ubuntu/partycashAPP
             git pull origin ${{ steps.vars.outputs.branch }}
+            # Option 1: Force a no-cache rebuild via docker compose
             docker compose -f docker-compose.yml -f ${{ steps.vars.outputs.compose_file }} down
-            docker compose -f docker-compose.yml -f ${{ steps.vars.outputs.compose_file }} up -d --build
+            docker compose -f docker-compose.yml -f ${{ steps.vars.outputs.compose_file }} build --no-cache
+            docker compose -f docker-compose.yml -f ${{ steps.vars.outputs.compose_file }} up -d
