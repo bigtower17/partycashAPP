@@ -42,7 +42,7 @@ export default function Navbar() {
   };
 
   const combinedItems = [...navItems, ...(role === 'admin' ? adminItems : [])];
-
+ 
   return (
     <>
       {/* Desktop Sidebar */}
