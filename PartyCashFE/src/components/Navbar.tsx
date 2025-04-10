@@ -46,7 +46,7 @@ export default function Navbar() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col bg-green-900 text-white w-64 p-4 space-y-4">
+      <aside className="hidden md:flex flex-col bg-red-900 text-white w-64 p-4 space-y-4">
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <span>💰</span> PartyCash
         </h1>
