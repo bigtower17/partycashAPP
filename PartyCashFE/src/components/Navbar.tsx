@@ -59,14 +59,14 @@ export default function Navbar() {
                 ? 'bg-cyan-900 font-semibold'
                 : 'hover:bg-cyan-800'
             }`}
-          >
+          >  
             {item.label}
           </Link>
         ))}
         <Button
           onClick={handleLogout}
           className="mt-auto bg-white text-cyan-900 hover:bg-cyan-100"
-        >
+        > 
           Logout
         </Button>
         <footer className="text-center text-xs text-gray-300 mt-4 px-2">
