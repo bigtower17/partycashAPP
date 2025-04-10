@@ -20,7 +20,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/ubuntu/partycash  # <-- aggiorna questo percorso
+            cd /home/ubuntu/partycashAPP
             git pull origin staging
             docker compose down
             docker compose up -d --build
