@@ -51,7 +51,7 @@ jobs:
           host: ${{ steps.vars.outputs.host }}
           username: ${{ steps.vars.outputs.user }}
           key: ${{ steps.vars.outputs.ssh_key }}
-          script: |
+          script: | 
             cd /home/ubuntu/partycashAPP
             git pull origin ${{ steps.vars.outputs.branch }}
             docker compose -f docker-compose.yml -f ${{ steps.vars.outputs.compose_file }} down
