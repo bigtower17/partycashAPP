@@ -70,7 +70,7 @@ export default function Navbar() {
           Logout
         </Button>
         <footer className="text-center text-xs text-gray-300 mt-4 px-2">
-          Beta 1.1 &copy; {new Date().getFullYear()}
+          Beta Staging 1.1 &copy; {new Date().getFullYear()}
         </footer>
       </aside>
 

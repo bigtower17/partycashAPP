@@ -16,7 +16,7 @@ jobs:
 
       - name: Set deployment variables
         id: vars
-        env:
+        env: 
           SSH_PRIVATE_KEY_PROD: ${{ secrets.SSH_PRIVATE_KEY_PROD }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           EC2_HOST_PROD: ${{ secrets.EC2_HOST_PROD }}
@@ -56,6 +56,7 @@ jobs:
               cd /home/ubuntu/partycashAPP
               git pull origin ${{ steps.vars.outputs.branch }}
               docker compose -f docker-compose.yml -f ${{ steps.vars.outputs.compose_file }} down
+              docker system prune -af
               docker compose -f docker-compose.yml -f ${{ steps.vars.outputs.compose_file }} build --no-cache
               docker compose -f docker-compose.yml -f ${{ steps.vars.outputs.compose_file }} up -d
         
