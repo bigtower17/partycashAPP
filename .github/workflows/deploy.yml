@@ -1,4 +1,4 @@
-name: Deploy to EC2 on push to staging
+name: Deploy to EC2
 
 on:
   push:
@@ -22,6 +22,21 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/ubuntu/partycashAPP
-            git pull origin staging
-            docker compose -f docker-compose.yml -f docker-compose.staging.yml down
-            docker compose -f docker-compose.yml -f docker-compose.staging.yml up -d --build
+            
+            # Determina il branch e l'override file in base al branch della push
+            if [ "${GITHUB_REF##*/}" = "main" ]; then
+              echo "Deploying production..."
+              branch="main"
+              compose_file="docker-compose.production.yml"
+            else
+              echo "Deploying staging..."
+              branch="staging"
+              compose_file="docker-compose.staging.yml"
+            fi
+            
+            # Esegui il pull dal branch corretto
+            git pull origin $branch
+            
+            # Usa il file di override corretto
+            docker compose -f docker-compose.yml -f $compose_file down
+            docker compose -f docker-compose.yml -f $compose_file up -d --build
