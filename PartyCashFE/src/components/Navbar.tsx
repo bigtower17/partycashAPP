@@ -46,7 +46,7 @@ export default function Navbar() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col bg-red-900 text-white w-64 p-4 space-y-4">
+      <aside className="hidden md:flex flex-col bg-cyan-900 text-white w-64 p-4 space-y-4">
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <span>💰</span> PartyCash
         </h1>
@@ -69,6 +69,9 @@ export default function Navbar() {
         >
           Logout
         </Button>
+        <footer className="text-center text-xs text-gray-300 mt-4 px-2">
+          Beta 1.1 &copy; {new Date().getFullYear()}
+        </footer>
       </aside>
 
       {/* Mobile Header */}
@@ -104,6 +107,9 @@ export default function Navbar() {
           >
             Logout
           </Button>
+          <footer className="text-center text-xs text-gray-300 mt-4 px-2">
+            Beta 1.1 &copy; {new Date().getFullYear()}
+          </footer>
         </div>
       )}
 
