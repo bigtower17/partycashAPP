@@ -8,8 +8,8 @@ export default function Login() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-cyan-500 to-cyan-900">
       <div className="max-w-md w-full p-8 bg-white shadow-xl rounded-lg flex flex-col items-center">
         {/* Header con logo e titolo PartyCash */}
-        <div className="flex flex-col items-center mb-6">
-          <div className="w-100 h-100 mb-4">
+        <div className="flex flex-col items-center mb-2">
+          <div className="w-80 h-80 mb-1">
             <img src={logo} alt="PartyCash Logo" className="w-full h-full object-contain" />
           </div>
         </div>
