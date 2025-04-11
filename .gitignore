@@ -41,6 +41,6 @@ config.ts
 # Frontend specific (keeping public folder)
 # Don't ignore public folder if it contains essential assets
 /public/
-
+.github\workflows\deploy.yml
 # Others
 **/coverage/
