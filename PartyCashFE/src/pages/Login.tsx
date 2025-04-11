@@ -1,5 +1,5 @@
 import LoginForm from '@/features/auth/LoginForm'
-import logo from '../assets/logo.png'
+import logo from '../assets/logo.png.png'
 
 export default function Login() {
   const currentYear = new Date().getFullYear()
