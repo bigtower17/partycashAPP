@@ -9,10 +9,9 @@ export default function Login() {
       <div className="max-w-md w-full p-8 bg-white shadow-xl rounded-lg flex flex-col items-center">
         {/* Header con logo e titolo PartyCash */}
         <div className="flex flex-col items-center mb-6">
-          <div className="w-24 h-24 mb-4">
+          <div className="w-100 h-100 mb-4">
             <img src={logo} alt="PartyCash Logo" className="w-full h-full object-contain" />
           </div>
-          <h1 className="text-3xl font-bold text-cyan-900">PartyCash</h1>
         </div>
         <LoginForm />
       </div>
