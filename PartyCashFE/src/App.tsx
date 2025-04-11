@@ -1,59 +1,28 @@
-// src/App.tsx
-import { FC } from 'react'
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate
-} from 'react-router-dom'
-import Login from './pages/Login'
-import NotFound from './pages/NotFound'
-import ProtectedRoute from './components/ProtectedRoute'
-import AppLayout from './AppLayout'
-import { routesConfig, RouteConfig } from './routesConfig'
+import LoginForm from '@/features/auth/LoginForm'
+import logo from '@/assets/logo.svg'
 
-const generateRoutes = (routes: RouteConfig[]) => {
-  return routes.map((route) => {
-    const { path, element, allowedRoles, children } = route;
-    const wrappedElement = (
-      <ProtectedRoute allowedRoles={allowedRoles}>
-        {element}
-      </ProtectedRoute>
-    );
-    return children ? (
-      <Route key={path} path={path} element={wrappedElement}>
-        {generateRoutes(children)}
-      </Route>
-    ) : (
-      <Route key={path} path={path} element={wrappedElement} />
-    );
-  });
-};
+export default function Login() {
+  const currentYear = new Date().getFullYear()
 
-const App: FC = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-cyan-500 to-cyan-900">
+      <div className="w-full max-w-7xl p-8 flex flex-col lg:flex-row items-center justify-center space-x-4 bg-white shadow-xl rounded-lg">
+        {/* Left side: Logo */}
+        <div className="flex justify-center lg:justify-start lg:w-1/3 w-full mb-4 lg:mb-0">
+          <div className="w-60 h-60">
+            <img src={logo} alt="PartyCash Logo" className="w-full h-full object-contain" />
+          </div>
+        </div>
+        {/* Right side: Login Form */}
+        <div className="w-full lg:w-2/3">
+          <LoginForm />
+        </div>
+      </div>
 
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <AppLayout />
-            </ProtectedRoute>
-          }
-        >
-          {generateRoutes(routesConfig)}
-
-          {/* Default route */}
-          <Route index element={<Navigate to="/dashboard" replace />} />
-        </Route>
-
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
-  );
+      {/* Footer with copyright positioned on the bottom-right */}
+      <footer className="absolute bottom-4 right-4 text-white text-sm">
+        &copy; {currentYear} B.Torregrossa
+      </footer>
+    </div>
+  )
 }
-
-export default App
