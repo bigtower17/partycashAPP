@@ -12,7 +12,7 @@ export default function Login() {
           <img src={logo} alt="PartyCash Logo" className="w-full h-full object-contain" />
         </div>
         {/* Login Form */}
-        <div className="w-full lg:w-2/3">
+        <div className="full lg:w-2/3">
           <LoginForm />
         </div>
         {/* Copyright */}

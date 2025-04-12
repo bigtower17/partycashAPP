@@ -14,7 +14,7 @@ export default function LoginForm() {
   }
 
   return (
-    <form onSubmit={submit} className="max-w-sm mx-auto mt-20 space-y-4">
+    <form onSubmit={submit} className="max-w-sm mx-auto space-y-4">
       <div className="space-y-1">
         <label htmlFor="login" className="text-sm font-medium">
           Email o Username
