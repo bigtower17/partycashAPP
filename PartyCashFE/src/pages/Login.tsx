@@ -6,7 +6,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex justify-center bg-gradient-to-br from-cyan-500 to-cyan-900">
-      <div className="w-max max-w-7xl p-4s flex flex-col lg:flex-row  justify-center space-x-4 bg-white shadow-xl rounded-lg">
+      <div className="w-max max-w-7xl p-4 flex flex-col lg:flex-row space-x-4 bg-white shadow-xl rounded-lg">
         {/* Left side: Logo */}
         <div className="flex justify-center lg:justify-center lg:w-1/2 w-full mb-4 lg:mb-0">
           <div className="w-60 h-60">
@@ -17,10 +17,10 @@ export default function Login() {
         <div className="w-full lg:w-2/2">
           <LoginForm />
         </div>
-        <div className="flex bottom-4 right-4 text-cyan-900 text-sm">
+        <div className="flex justify-center p-8 text-cyan-900 text-sm">
         &copy; {currentYear} B.Torregrossa
       </div>
-      
+
       </div>
 
       {/* Footer with copyright positioned on the bottom-right */}
