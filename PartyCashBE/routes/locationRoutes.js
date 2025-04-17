@@ -8,7 +8,7 @@ const { getLocationReports } = require('../controllers/locationReportController'
 router.get('/', authenticateJWT, locationController.getLocations);
 router.post('/', authenticateJWT, checkRole('admin', 'staff'), locationController.createLocation);
 
-router.get('/report', authenticateJWT, checkRole('admin', 'auditor'), getLocationReports);
+router.get('/report', authenticateJWT, checkRole('admin', 'staff', 'auditor'), getLocationReports);
 
 /**
  * @swagger
@@ -26,7 +26,7 @@ router.get('/report', authenticateJWT, checkRole('admin', 'auditor'), getLocatio
  *       403:
  *         description: Forbidden
  */
-router.get('/all', authenticateJWT, checkRole('admin'), locationController.getAdminLocations);
+router.get('/all', authenticateJWT, checkRole('admin', 'staff', 'auditor'), locationController.getAdminLocations);
 
 /**
  * @swagger
@@ -83,7 +83,7 @@ router.get('/:id', authenticateJWT, locationController.getLocationById);
  *       404:
  *         description: Location not found
  */
-router.put('/:id', authenticateJWT, checkRole('admin', 'staff'), locationController.updateLocation);
+router.put('/:id', authenticateJWT, checkRole('admin', 'staff', 'auditor'), locationController.updateLocation);
 
 /**
  * @swagger
@@ -105,7 +105,7 @@ router.put('/:id', authenticateJWT, checkRole('admin', 'staff'), locationControl
  *       404:
  *         description: Location not found
  */
-router.delete('/:id', authenticateJWT, checkRole('admin'), locationController.deleteLocation);
+router.delete('/:id', authenticateJWT, checkRole('admin', 'staff', 'auditor'), locationController.deleteLocation);
 
 /**
  * @swagger

@@ -27,7 +27,7 @@ const checkRole = require('../middlewares/roleMiddleware');
  *       403:
  *         description: Forbidden
  */
-router.get('/', authenticateJWT, checkRole('admin'), userController.getAllUsers);
+router.get('/', authenticateJWT, checkRole('admin', 'staff', 'auditor'), userController.getAllUsers);
 
 /**
  * @swagger
@@ -63,7 +63,7 @@ router.get('/', authenticateJWT, checkRole('admin'), userController.getAllUsers)
  *       403:
  *         description: Forbidden.
  */
-router.post('/', authenticateJWT, checkRole('admin'), userController.createUser);
+router.post('/', authenticateJWT, checkRole('admin', 'staff', 'auditor'), userController.createUser);
 
 /**
  * @swagger
@@ -146,7 +146,7 @@ router.post('/batch', authenticateJWT, userController.getUsersByIds);
  *       200:
  *         description: Role updated
  */
-router.patch('/:id/role', authenticateJWT, checkRole('admin'), userController.updateUserRole);
+router.patch('/:id/role', authenticateJWT, checkRole('admin', 'staff', 'auditor'), userController.updateUserRole);
 
 /**
  * @swagger
@@ -170,7 +170,7 @@ router.patch('/:id/role', authenticateJWT, checkRole('admin'), userController.up
  *       404:
  *         description: User not found
  */
-router.delete('/:id', authenticateJWT, checkRole('admin'), userController.deleteUser);
+router.delete('/:id', authenticateJWT, checkRole('admin', 'staff', 'auditor'), userController.deleteUser);
 
 /**
  * @swagger
@@ -205,6 +205,6 @@ router.delete('/:id', authenticateJWT, checkRole('admin'), userController.delete
  *       404:
  *         description: User not found or deleted
  */
-router.patch('/:id/password', authenticateJWT, checkRole('admin'), userController.resetUserPassword);
+router.patch('/:id/password', authenticateJWT, checkRole('admin', 'staff', 'auditor'), userController.resetUserPassword);
 
 module.exports = router;
