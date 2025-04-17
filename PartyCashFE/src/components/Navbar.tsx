@@ -70,7 +70,7 @@ export default function Navbar() {
           Logout
         </Button>
         <footer className="text-center text-xs text-gray-300 mt-4 px-2">
-          Beta 1.2 &copy; {new Date().getFullYear()}
+          Beta 1.3 STAGING &copy; {new Date().getFullYear()}
         </footer>
       </aside>
 
@@ -83,7 +83,7 @@ export default function Navbar() {
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
-
+ 
       {/* Mobile Menu */}
       {open && (
         <div className="md:hidden fixed top-16 left-0 right-0 z-50 bg-cyan-900 text-white p-4 flex flex-col space-y-2">
@@ -108,7 +108,7 @@ export default function Navbar() {
             Logout
           </Button>
           <footer className="text-center text-xs text-gray-300 mt-4 px-2">
-            Beta 1.1 &copy; {new Date().getFullYear()}
+            Beta 1.3 STAGING &copy; {new Date().getFullYear()}
           </footer>
         </div>
       )}
