@@ -1,9 +1,8 @@
 // src/routes/locationBudgetRoutes.js
-
 const express = require('express');
 const router = express.Router();
-const locationBudgetController = require('../controllers/locationBudgetController'); // Controller for location budget
-const operationController = require('../controllers/operationController'); // Controller for operations (POS, Cash)
+const locationBudgetController = require('../controllers/locationBudgetController'); // Correct import
+const operationController = require('../controllers/operationController'); // Correct import
 const authenticateJWT = require('../middlewares/authMiddleware');
 const checkRole = require('../middlewares/roleMiddleware');
 
@@ -23,7 +22,7 @@ const checkRole = require('../middlewares/roleMiddleware');
  *       500:
  *         description: Error retrieving POS operations
  */
-router.get('/operations/pos', authenticateJWT, operationController.getPosOperations);  // Corrected route for POS
+router.get('/operations/pos', authenticateJWT, operationController.getPosOperations); // Correct route for POS
 
 /**
  * @swagger
@@ -41,7 +40,7 @@ router.get('/operations/pos', authenticateJWT, operationController.getPosOperati
  *       500:
  *         description: Error retrieving cash operations
  */
-router.get('/operations/cash', authenticateJWT, operationController.getCashOperations);  // Corrected route for Cash
+router.get('/operations/cash', authenticateJWT, operationController.getCashOperations); // Correct route for Cash
 
 /**
  * @swagger

@@ -26,7 +26,25 @@ const withdraw = async (req, res) => {
     res.status(400).json({ message: error.message || 'Errore durante il withdrawal' });
   }
 };
+const getPosOperations = async (_req, res) => {
+  try {
+    const operations = await operationService.getPosOperations();
+    res.json({ operations });
+  } catch (error) {
+    console.error('Error retrieving POS operations:', error.message);
+    res.status(500).send('Error retrieving POS operations');
+  }
+};
 
+const getCashOperations = async (_req, res) => {
+  try {
+    const operations = await operationService.getCashOperations();
+    res.json({ operations });
+  } catch (error) {
+    console.error('Error retrieving cash operations:', error.message);
+    res.status(500).send('Error retrieving cash operations');
+  }
+};
 const getLastOperations = async (_req, res) => {
   try {
     const operations = await operationService.getLastOperations();
@@ -51,5 +69,7 @@ module.exports = {
   deposit,
   withdraw,
   getLastOperations,
-  getOperationsWithLocation
+  getOperationsWithLocation,
+  getPosOperations,
+  getCashOperations
 };
