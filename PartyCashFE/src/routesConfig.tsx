@@ -27,17 +27,17 @@ export const routesConfig: RouteConfig[] = [
   {
     path: "deposit",
     element: <DepositForm />,
-    allowedRoles: ["admin", "staff"],
+    allowedRoles: ["admin", "staff", "auditor"],
   },
   {
     path: "withdraw",
     element: <WithdrawForm />,
-    allowedRoles: ["admin", "staff"],
+    allowedRoles: ["admin", "staff", "auditor"],
   },
   {
     path: "quotes",
     element: <QuotesDashboard />,
-    allowedRoles: ["admin", "staff"],
+    allowedRoles: ["admin", "staff", "auditor"],
   },
   {
     path: "locations",
@@ -62,7 +62,7 @@ export const routesConfig: RouteConfig[] = [
   {
     path: "starting-cash-dashboard",
     element: <StartingCashManager />,
-    allowedRoles: ["admin", "staff"],
+    allowedRoles: ["admin", "staff", "auditor"],
   },
   {
     path: "users-admin",
@@ -72,6 +72,6 @@ export const routesConfig: RouteConfig[] = [
   {
     path: "users/new",
     element: <NewUserForm />,
-    allowedRoles: ["admin"],
+    allowedRoles: ["admin", "staff", "auditor"],
   }
 ];
