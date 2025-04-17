@@ -95,10 +95,21 @@ async function getOperationsWithLocation() {
   const result = await pool.query(queries.getOperationsWithLocation());
   return result.rows;
 }
+async function getPosOperations() {
+  const result = await pool.query(queries.getPosOperations()); // Fetch POS operations
+  return result.rows;
+}
+
+async function getCashOperations() {
+  const result = await pool.query(queries.getCashOperations()); // Fetch cash operations
+  return result.rows;
+}
 
 module.exports = {
   deposit,
   withdraw,
   getLastOperations,
-  getOperationsWithLocation
+  getOperationsWithLocation,
+  getPosOperations,
+  getCashOperations
 };

@@ -11,4 +11,5 @@ const getLocationReports = async (_req, res) => {
   }
 };
 
+
 module.exports = { getLocationReports };

@@ -6,10 +6,18 @@ async function fetchLocationBudget(locationId) {
   return result.rows[0] || null;
 }
 
-async function updateOrCreateLocationBudget(locationId, amount, userId) {
+async function updateOrCreateLocationBudget(locationId, amount, userId, isPos) {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
+
+    // Ensure location budget can only be updated with cash transactions (not POS)
+    if (isPos) {
+      // Skip updating the location budget for POS transactions
+      console.log('POS transaction - Skipping location budget update');
+      await client.query('COMMIT');
+      return { created: false, new_balance: null }; // No change to location budget
+    }
 
     // Check if a budget row exists for the given location
     const check = await client.query(budgetQueries.checkBudgetExists(), [locationId]);
@@ -33,6 +41,7 @@ async function updateOrCreateLocationBudget(locationId, amount, userId) {
     client.release();
   }
 }
+
 
 async function fetchAllLocationBudgets() {
   const result = await pool.query(budgetQueries.getAllBudgets());
