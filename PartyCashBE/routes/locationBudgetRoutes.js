@@ -1,8 +1,12 @@
+// src/routes/locationBudgetRoutes.js
+
 const express = require('express');
 const router = express.Router();
-const { getLocationBudget, updateLocationBudget, getAllLocationBudgets, getCashOperations, getPosOperations } = require('../controllers/locationBudgetController');
+const locationBudgetController = require('../controllers/locationBudgetController'); // Controller for location budget
+const operationController = require('../controllers/operationController'); // Controller for operations (POS, Cash)
 const authenticateJWT = require('../middlewares/authMiddleware');
 const checkRole = require('../middlewares/roleMiddleware');
+
 /**
  * @swagger
  * /operations/pos:
@@ -19,7 +23,7 @@ const checkRole = require('../middlewares/roleMiddleware');
  *       500:
  *         description: Error retrieving POS operations
  */
-router.get('/pos', authenticateJWT, locationBudgetController.getPosOperations);
+router.get('/operations/pos', authenticateJWT, operationController.getPosOperations);  // Corrected route for POS
 
 /**
  * @swagger
@@ -37,42 +41,8 @@ router.get('/pos', authenticateJWT, locationBudgetController.getPosOperations);
  *       500:
  *         description: Error retrieving cash operations
  */
-router.get('/cash', authenticateJWT, locationBudgetController.getCashOperations);
-/**
- * @swagger
- * /operations/pos:
- *   get:
- *     summary: Get operations done via POS
- *     description: Retrieve the most recent POS operations.
- *     tags:
- *       - Operations
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: List of POS operations
- *       500:
- *         description: Error retrieving POS operations
- */
-router.get('/pos', authenticateJWT, operationController.getPosOperations);
+router.get('/operations/cash', authenticateJWT, operationController.getCashOperations);  // Corrected route for Cash
 
-/**
- * @swagger
- * /operations/cash:
- *   get:
- *     summary: Get operations done via cash
- *     description: Retrieve the most recent cash operations.
- *     tags:
- *       - Operations
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: List of cash operations
- *       500:
- *         description: Error retrieving cash operations
- */
-router.get('/cash', authenticateJWT, operationController.getCashOperations);
 /**
  * @swagger
  * /location-budget/all:
@@ -109,7 +79,7 @@ router.get('/cash', authenticateJWT, operationController.getCashOperations);
  *       500:
  *         description: Errore del server
  */
-router.get('/all', authenticateJWT, checkRole('admin', 'staff'), getAllLocationBudgets);
+router.get('/location-budget/all', authenticateJWT, checkRole('admin', 'staff'), locationBudgetController.getAllLocationBudgets);
 
 /**
  * @swagger
@@ -152,7 +122,7 @@ router.get('/all', authenticateJWT, checkRole('admin', 'staff'), getAllLocationB
  *       500:
  *         description: Errore del server
  */
-router.get('/:locationId', authenticateJWT, checkRole('admin', 'staff'), getLocationBudget);
+router.get('/location-budget/:locationId', authenticateJWT, checkRole('admin', 'staff'), locationBudgetController.getLocationBudget);
 
 /**
  * @swagger
@@ -203,6 +173,6 @@ router.get('/:locationId', authenticateJWT, checkRole('admin', 'staff'), getLoca
  *       500:
  *         description: Errore del server
  */
-router.post('/:locationId/update', authenticateJWT, checkRole('admin', 'staff'), updateLocationBudget);
+router.post('/location-budget/:locationId/update', authenticateJWT, checkRole('admin', 'staff'), locationBudgetController.updateLocationBudget);
 
 module.exports = router;
