@@ -1,8 +1,6 @@
 // src/controllers/locationBudgetController.js
 const locationBudgetService = require('../services/locationBudgetService')
 
-// src/controllers/locationBudgetController.js
-const locationBudgetService = require('../services/locationBudgetService');
 
 const getLocationBudget = async (req, res) => {
   const { locationId } = req.params;
