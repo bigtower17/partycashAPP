@@ -35,6 +35,10 @@ const authenticateJWT = require('../middlewares/authMiddleware');
  *                 type: integer
  *                 description: The ID of the location where the deposit was made
  *                 example: 1
+ *               isPos:
+ *                 type: boolean
+ *                 description: Whether the deposit was made via POS (default: false)
+ *                 example: true
  *     responses:
  *       201:
  *         description: Deposit successful
@@ -45,6 +49,7 @@ const authenticateJWT = require('../middlewares/authMiddleware');
  *       500:
  *         description: Internal server error
  */
+
 router.post('/deposit', authenticateJWT, operationController.deposit);
 
 /**

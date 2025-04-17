@@ -1,9 +1,44 @@
 const express = require('express');
 const router = express.Router();
-const { getLocationBudget, updateLocationBudget, getAllLocationBudgets } = require('../controllers/locationBudgetController');
+const locationBudgetController = require('../controllers/locationBudgetController');
 const authenticateJWT = require('../middlewares/authMiddleware');
 const checkRole = require('../middlewares/roleMiddleware');
 
+/**
+ * @swagger
+ * /operations/pos:
+ *   get:
+ *     summary: Get operations done via POS
+ *     description: Retrieve the most recent POS operations.
+ *     tags:
+ *       - Operations
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of POS operations
+ *       500:
+ *         description: Error retrieving POS operations
+ */
+router.get('/pos', authenticateJWT, locationBudgetController.getPosOperations);
+
+/**
+ * @swagger
+ * /operations/cash:
+ *   get:
+ *     summary: Get operations done via cash
+ *     description: Retrieve the most recent cash operations.
+ *     tags:
+ *       - Operations
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of cash operations
+ *       500:
+ *         description: Error retrieving cash operations
+ */
+router.get('/cash', authenticateJWT, locationBudgetController.getCashOperations);
 /**
  * @swagger
  * /location-budget/all:

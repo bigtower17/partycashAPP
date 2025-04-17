@@ -2,11 +2,12 @@
 
 function insertOperation() {
   return `
-    INSERT INTO operations (user_id, type, amount, description, location_id)
-    VALUES ($1, $2, $3, $4, $5)
+    INSERT INTO operations (user_id, type, amount, description, location_id, is_pos)
+    VALUES ($1, $2, $3, $4, $5, $6)
     RETURNING id
   `;
 }
+
 
 function updateSharedBudget() {
   return `

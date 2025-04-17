@@ -45,9 +45,36 @@ const getAllLocationBudgets = async (req, res) => {
     res.status(500).send('Errore del server');
   }
 };
+// src/controllers/operationController.js
+
+const operationService = require('../services/operationService');
+
+const getPosOperations = async (_req, res) => {
+  try {
+    const operations = await operationService.getPosOperations();
+    res.json({ operations });
+  } catch (error) {
+    console.error('Error retrieving POS operations:', error.message);
+    res.status(500).send('Error retrieving POS operations');
+  }
+};
+
+const getCashOperations = async (_req, res) => {
+  try {
+    const operations = await operationService.getCashOperations();
+    res.json({ operations });
+  } catch (error) {
+    console.error('Error retrieving cash operations:', error.message);
+    res.status(500).send('Error retrieving cash operations');
+  }
+};
+
 
 module.exports = {
   getLocationBudget,
   updateLocationBudget,
-  getAllLocationBudgets
+  getAllLocationBudgets,
+  getPosOperations,
+  getCashOperations
+
 };

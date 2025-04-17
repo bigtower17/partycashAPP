@@ -2,11 +2,11 @@
 const operationService = require('../services/operationService');
 
 const deposit = async (req, res) => {
-  const { amount, description, locationId } = req.body;
+  const { amount, description, locationId, isPos } = req.body;  // Extract isPos from request
   const userId = req.user.id;
 
   try {
-    const operationId = await operationService.deposit({ amount, description, locationId, userId });
+    const operationId = await operationService.deposit({ amount, description, locationId, userId, isPos });
     res.status(201).json({ message: 'Deposit registrato', operationId });
   } catch (error) {
     console.error('Errore nel deposit:', error.message);

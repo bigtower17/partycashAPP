@@ -32,12 +32,34 @@ const getAllBudgets = () => `
   JOIN location l ON lb.location_id = l.id
   ORDER BY l.name
 `;
+// Fetch all POS operations (is_pos = true)
+function getPosOperations() {
+  return `
+    SELECT id, amount, type, description, created_at, user_id, location_id
+    FROM operations
+    WHERE is_pos = TRUE
+    ORDER BY created_at DESC
+    LIMIT 100
+  `;
+}
 
+// Fetch all cash operations (is_pos = false)
+function getCashOperations() {
+  return `
+    SELECT id, amount, type, description, created_at, user_id, location_id
+    FROM operations
+    WHERE is_pos = FALSE
+    ORDER BY created_at DESC
+    LIMIT 100
+  `;
+}
 module.exports = {
   getLocationBudget,
   checkBudgetExists,
   insertNewBudget,
   incrementExistingBudget,
   updateBudget,
-  getAllBudgets
+  getAllBudgets,
+  getCashOperations,
+  getPosOperations
 };

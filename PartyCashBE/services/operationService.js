@@ -2,7 +2,7 @@ const pool = require('../db');
 const queries = require('../models/operationModel');
 const { validateAmount } = require('../utils/validate');
 
-async function deposit({ amount, description, locationId, userId, type = 'deposit' }) {
+async function deposit({ amount, description, locationId, userId, type = 'deposit', isPos = false }) {
   const validatedAmount = validateAmount(amount);
   const client = await pool.connect();
 
@@ -16,26 +16,28 @@ async function deposit({ amount, description, locationId, userId, type = 'deposi
         throw new Error('Invalid location ID');
       }
 
-      // Ensure the location budget row exists.
-      const existingBudget = await client.query(queries.checkLocationBudgetExists(), [locationId]);
-      if (existingBudget.rows.length === 0) {
-        console.log('⚠️ No location budget row. Inserting one...');
-        await client.query(queries.insertLocationBudget(), [locationId, 0, userId]);
-        console.log('✅ Location budget row inserted');
+      // Ensure the location budget row exists only if it's a cash transaction (not POS)
+      if (!isPos) {
+        const existingBudget = await client.query(queries.checkLocationBudgetExists(), [locationId]);
+        if (existingBudget.rows.length === 0) {
+          console.log('⚠️ No location budget row. Inserting one...');
+          await client.query(queries.insertLocationBudget(), [locationId, 0, userId]);
+          console.log('✅ Location budget row inserted');
+        }
       }
     }
 
-    // Insert the operation record.
+    // Insert the operation record with `is_pos`
     const result = await client.query(
       queries.insertOperation(),
-      [userId, type, validatedAmount, description, locationId || null]
+      [userId, type, validatedAmount, description, locationId || null, isPos]
     );
 
-    // Always update the shared budget.
+    // Always update the shared budget (this will handle POS and cash transactions)
     await client.query(queries.updateSharedBudget(), [validatedAmount, userId]);
 
-    // If a valid locationId is provided, update the location budget.
-    if (locationId && !isNaN(locationId)) {
+    // If it's a cash transaction (not POS), update the location budget
+    if (!isPos && locationId) {
       await client.query(queries.upsertLocationBudget(), [locationId, validatedAmount, userId]);
     }
 
@@ -58,7 +60,7 @@ async function withdraw({ amount, description, userId }) {
   try {
     await client.query('BEGIN');
 
-    // 1. Check the shared budget to ensure enough funds
+    // Check the shared budget to ensure enough funds for withdrawal
     const budgetResult = await client.query(queries.getBudgetBalance());
     const currentBalance = budgetResult.rows[0]?.current_balance || 0;
 
@@ -66,13 +68,10 @@ async function withdraw({ amount, description, userId }) {
       throw new Error('Insufficient funds');
     }
 
-    // 2. Insert the withdrawal operation as a negative amount
-    //    (our query does -$2, so we pass validatedAmount as is).
+    // Insert the withdrawal operation as a negative amount (we pass validatedAmount as is).
     const result = await client.query(queries.insertWithdrawal(), [userId, -Math.abs(validatedAmount), description]);
 
-    // 3. Update the shared budget by adding a negative amount.
-    //    Because insertWithdrawal() stored a negative, we also pass validatedAmount
-    //    to add a negative value. However, let's unify it to pass the negative explicitly:
+    // Update the shared budget by subtracting the withdrawal amount (negative value)
     await client.query(queries.updateSharedBudgetByAmount(), [-validatedAmount, userId]);
 
     await client.query('COMMIT');
@@ -85,6 +84,7 @@ async function withdraw({ amount, description, userId }) {
     client.release();
   }
 }
+
 
 async function getLastOperations() {
   const result = await pool.query(queries.getLastOperations());
