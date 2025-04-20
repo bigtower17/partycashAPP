@@ -7,7 +7,7 @@ const validateSignedToken = require('../middlewares/validateSignedToken');
 
 /**
  * @swagger
- * /export/operations/csv:
+ * /api/export/operations/csv:
  *   get:
  *     summary: Esporta le operazioni in formato CSV
  *     description: Esporta l'elenco completo delle operazioni in formato CSV, includendo tipo, utente, importo, descrizione, location, data.
@@ -32,7 +32,7 @@ router.get('/operations/csv', validateSignedToken, exportOperationsCSV);
 
 /**
  * @swagger
- * /export/operations/pdf:
+ * /api/export/operations/pdf:
  *   get:
  *     summary: Esporta le operazioni in formato PDF
  *     description: Genera un file PDF contenente l'elenco dettagliato delle operazioni recenti.
@@ -57,7 +57,7 @@ router.get('/operations/pdf', validateSignedToken, exportOperationsPDF) // âœ…
 
 /**
  * @swagger
- * /export/locations/csv:
+ * /api/export/locations/csv:
  *   get:
  *     summary: Esporta il report location in formato CSV
  *     tags: [Export]
@@ -76,7 +76,7 @@ router.get('/locations/pdf', validateSignedToken, exportLocationReportPDF) // âœ
 
 /**
  * @swagger
- * /export/locations/pdf:
+ * /api/export/locations/pdf:
  *   get:
  *     summary: Esporta il report location in formato PDF
  *     tags: [Export]

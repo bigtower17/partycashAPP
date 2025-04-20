@@ -5,7 +5,7 @@ const authenticateJWT = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
- * /budget:
+ * /api/budget:
  *   get:
  *     summary: Get the current shared budget
  *     description: Retrieve the current shared budget. User must be authenticated.

@@ -49,6 +49,12 @@ export const operationStyleMap: Record<
     text: 'text-blue-600 font-semibold',
     border: 'border-blue-500',
     prefix: '+'
-  }
-  
+  },
+  pos: {
+    label: 'POS',
+    badge: 'bg-cyan-700 text-white',
+    text:  'text-cyan-700 font-semibold',  // match deposit style
+    border:'border-green-500',
+    prefix:'+'                             // show plus
+  },
 }

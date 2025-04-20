@@ -4,7 +4,7 @@ const authController = require('../controllers/authController');
 
 /**
  * @swagger
- * /auth/register:
+ * /api/auth/register:
  *   post:
  *     summary: Register a new user
  *     tags:
@@ -17,10 +17,10 @@ const authController = require('../controllers/authController');
  *           schema:
  *             type: object
  *             required:
- *               - email
+ *               - login
  *               - password
  *             properties:
- *               email:
+ *               login:
  *                 type: string
  *                 example: user@example.com
  *               password:
@@ -36,7 +36,7 @@ router.post('/register', authController.register);
 
 /**
  * @swagger
- * /auth/login:
+ * /api/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -49,15 +49,15 @@ router.post('/register', authController.register);
  *           schema:
  *             type: object
  *             required:
- *               - email
+ *               - login
  *               - password
  *             properties:
- *               email:
+ *               login:
  *                 type: string
- *                 example: string
+ *                 example: torregrossa
  *               password:
  *                 type: string
- *                 example: string
+ *                 example: torregrossa
  *     responses:
  *       200:
  *         description: JWT token returned

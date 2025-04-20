@@ -14,7 +14,7 @@ export type Operation = {
   user_id: number
   location_id?: number  // optional, returned by with-location endpoint
   location_name?: string
-  
+  is_pos: boolean
 }
 
 

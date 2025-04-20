@@ -6,12 +6,13 @@ const swaggerDefinition = {
   info: {
     title: 'Party Budgeting API',
     version: '1.0.0',
-    description:
-      'API for managing a shared party budget, deposits, withdrawals, and user authentication',
+    description: 'API for managing a shared party budget, deposits, withdrawals, and user authentication',
   },
   servers: [
     {
-      url: `https://${process.env.DOMAIN_NAME}`,
+      url: process.env.NODE_ENV === 'production'
+        ? `https://${process.env.DOMAIN_NAME}:${process.env.HTTPS_PORT}`
+        : `http://localhost:${process.env.PORT}`,  // Use HTTP for local testing
     },
   ],
   components: {
@@ -27,7 +28,7 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: ['./routes/*.js'], // point to your route files for annotations
+  apis: ['./routes/*.js'],  // point to your route files for annotations
 };
 
 const swaggerSpec = swaggerJSDoc(options);

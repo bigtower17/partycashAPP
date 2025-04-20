@@ -5,7 +5,7 @@ const authenticateJWT = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
- * /operations/deposit:
+ * /api/operations/deposit:
  *   post:
  *     summary: Deposit money into the user's account
  *     description: Deposit an amount into the user's account. The user must be authenticated.
@@ -29,7 +29,7 @@ const authenticateJWT = require('../middlewares/authMiddleware');
  *                 example: 100.00
  *               description:
  *                 type: string
- *                 description: A description for the deposit
+ *                 description: "A description for the deposit"
  *                 example: "Party fund deposit"
  *               locationId:
  *                 type: integer
@@ -37,7 +37,7 @@ const authenticateJWT = require('../middlewares/authMiddleware');
  *                 example: 1
  *               isPos:
  *                 type: boolean
- *                 description: Whether the deposit was made via POS (default: false)
+ *                 description: "Whether the deposit was made via POS (default: false)"
  *                 example: true
  *     responses:
  *       201:
@@ -50,11 +50,12 @@ const authenticateJWT = require('../middlewares/authMiddleware');
  *         description: Internal server error
  */
 
+
 router.post('/deposit', authenticateJWT, operationController.deposit);
 
 /**
  * @swagger
- * /operations/withdraw:
+ * /api/operations/withdraw:
  *   post:
  *     summary: Withdraw money from the user's account
  *     description: Withdraw an amount from the user's account. The user must be authenticated, and there must be enough balance.
@@ -91,7 +92,7 @@ router.post('/withdraw', authenticateJWT, operationController.withdraw);
 
 /**
  * @swagger
- * /operations/last-operations:
+ * /api/operations/last-operations:
  *   get:
  *     summary: Get the last 100 operations
  *     description: Retrieve the most recent operations for the authenticated user.
@@ -109,7 +110,7 @@ router.get('/last-operations', authenticateJWT, operationController.getLastOpera
 
 /**
  * @swagger
- * /operations/with-location:
+ * /api/operations/with-location:
  *   get:
  *     summary: Get operations with location name
  *     description: Retrieve recent operations enriched with the location name.

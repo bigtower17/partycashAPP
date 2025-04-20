@@ -2,11 +2,14 @@ const pool = require('../db');
 const queries = require('../models/operationModel');
 const { validateAmount } = require('../utils/validate');
 
-async function deposit({ amount, description, locationId, userId, type = 'deposit', isPos = false }) {
+async function deposit({ amount, description, locationId, userId, type = 'deposit', is_pos = false }) {
+  const isPos = is_pos
   const validatedAmount = validateAmount(amount);
   const client = await pool.connect();
 
   try {
+    console.log('SQL:', queries.insertOperation());
+
     await client.query('BEGIN');
 
     // If a locationId is provided and is valid, ensure the location exists and its budget row is present.
@@ -30,7 +33,7 @@ async function deposit({ amount, description, locationId, userId, type = 'deposi
     // Insert the operation record with `is_pos`
     const result = await client.query(
       queries.insertOperation(),
-      [userId, type, validatedAmount, description, locationId || null, isPos]
+      [userId, type, validatedAmount, description, locationId || null, is_pos]
     );
 
     // Always update the shared budget (this will handle POS and cash transactions)

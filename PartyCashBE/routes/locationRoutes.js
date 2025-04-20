@@ -5,14 +5,56 @@ const authenticateJWT = require('../middlewares/authMiddleware');
 const checkRole = require('../middlewares/roleMiddleware');
 const { getLocationReports } = require('../controllers/locationReportController');
 
+/**
+ * @swagger
+ * /api/locations:
+ *   get:
+ *     summary: Get all locations (active only)
+ *     tags: [Locations]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of all locations
+ *       500:
+ *         description: Internal server error
+ */
 router.get('/', authenticateJWT, locationController.getLocations);
+/**
+ * @swagger
+ * /api/locations:
+ *   post:
+ *     summary: Create a new location
+ *     tags: [Locations]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: New Location
+ *     responses:
+ *       201:
+ *         description: Location created successfully
+ *       400:
+ *         description: Invalid input
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/', authenticateJWT, checkRole('admin', 'staff'), locationController.createLocation);
 
 router.get('/report', authenticateJWT, checkRole('admin', 'staff', 'auditor'), getLocationReports);
 
 /**
  * @swagger
- * /locations/all:
+ * /api/locations/all:
  *   get:
  *     summary: Get all locations (active and inactive) – admin only
  *     tags: [Locations]
@@ -30,7 +72,7 @@ router.get('/all', authenticateJWT, checkRole('admin', 'staff', 'auditor'), loca
 
 /**
  * @swagger
- * /locations/{id}:
+ * /api/locations/{id}:
  *   get:
  *     summary: Get a single location by ID
  *     tags: [Locations]
@@ -53,7 +95,7 @@ router.get('/:id', authenticateJWT, locationController.getLocationById);
 
 /**
  * @swagger
- * /locations/{id}:
+ * /api/locations/{id}:
  *   put:
  *     summary: Update an existing location
  *     tags: [Locations]
@@ -87,7 +129,7 @@ router.put('/:id', authenticateJWT, checkRole('admin', 'staff', 'auditor'), loca
 
 /**
  * @swagger
- * /locations/{id}:
+ * /api/locations/{id}:
  *   delete:
  *     summary: Delete a location
  *     tags: [Locations]
@@ -109,7 +151,7 @@ router.delete('/:id', authenticateJWT, checkRole('admin', 'staff', 'auditor'), l
 
 /**
  * @swagger
- * /locations/{id}/deactivate:
+ * /api/locations/{id}/deactivate:
  *   patch:
  *     summary: Disattiva (soft delete) una location
  *     tags: [Locations]
@@ -131,7 +173,7 @@ router.patch('/:id/deactivate', authenticateJWT, checkRole('admin'), locationCon
 
 /**
  * @swagger
- * /locations/{id}/reactivate:
+ * /api/locations/{id}/reactivate:
  *   patch:
  *     summary: Riattiva una location disattivata
  *     tags: [Locations]

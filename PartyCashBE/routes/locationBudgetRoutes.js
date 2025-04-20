@@ -1,14 +1,14 @@
 // src/routes/locationBudgetRoutes.js
 const express = require('express');
 const router = express.Router();
-const locationBudgetController = require('../controllers/locationBudgetController'); // Correct import
+const { getLocationBudget, updateLocationBudget, getAllLocationBudgets } = require('../controllers/locationBudgetController'); // Correct import
 const operationController = require('../controllers/operationController'); // Correct import
 const authenticateJWT = require('../middlewares/authMiddleware');
 const checkRole = require('../middlewares/roleMiddleware');
 
 /**
  * @swagger
- * /operations/pos:
+ * /api/operations/pos:
  *   get:
  *     summary: Get operations done via POS
  *     description: Retrieve the most recent POS operations.
@@ -26,7 +26,7 @@ router.get('/operations/pos', authenticateJWT, operationController.getPosOperati
 
 /**
  * @swagger
- * /operations/cash:
+ * /api/operations/cash:
  *   get:
  *     summary: Get operations done via cash
  *     description: Retrieve the most recent cash operations.
@@ -44,7 +44,7 @@ router.get('/operations/cash', authenticateJWT, operationController.getCashOpera
 
 /**
  * @swagger
- * /location-budget/all:
+ * /api/location-budget/all:
  *   get:
  *     summary: Ottieni tutti i bilanci delle location
  *     description: Recupera tutte le righe del budget per le location esistenti.
@@ -78,11 +78,11 @@ router.get('/operations/cash', authenticateJWT, operationController.getCashOpera
  *       500:
  *         description: Errore del server
  */
-router.get('/location-budget/all', authenticateJWT, checkRole('admin', 'staff'), locationBudgetController.getAllLocationBudgets);
+router.get('/all', authenticateJWT, checkRole('admin', 'staff'), getAllLocationBudgets);
 
 /**
  * @swagger
- * /location-budget/{locationId}:
+ * /api/location-budget/{locationId}:
  *   get:
  *     summary: Ottieni il budget corrente di una location
  *     description: Ritorna il bilancio attuale di una location specifica (es. bar, botteghino).
@@ -121,11 +121,11 @@ router.get('/location-budget/all', authenticateJWT, checkRole('admin', 'staff'),
  *       500:
  *         description: Errore del server
  */
-router.get('/location-budget/:locationId', authenticateJWT, checkRole('admin', 'staff'), locationBudgetController.getLocationBudget);
+router.get('/:locationId', authenticateJWT, checkRole('admin', 'staff'), getLocationBudget);
 
 /**
  * @swagger
- * /location-budget/{locationId}/update:
+ * /api/location-budget/{locationId}/update:
  *   post:
  *     summary: Aggiorna il budget di una location (deposito o prelievo)
  *     description: Aggiunge (valore positivo) o rimuove (valore negativo) denaro dal budget di una location.
@@ -172,6 +172,6 @@ router.get('/location-budget/:locationId', authenticateJWT, checkRole('admin', '
  *       500:
  *         description: Errore del server
  */
-router.post('/location-budget/:locationId/update', authenticateJWT, checkRole('admin', 'staff'), locationBudgetController.updateLocationBudget);
+router.post('/:locationId/update', authenticateJWT, checkRole('admin', 'staff'), updateLocationBudget);
 
 module.exports = router;

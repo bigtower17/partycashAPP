@@ -2,9 +2,13 @@
 
 function insertOperation() {
   return `
-    INSERT INTO operations (user_id, type, amount, description, location_id, is_pos)
-    VALUES ($1, $2, $3, $4, $5, $6)
-    RETURNING id
+    INSERT INTO operations
+      (user_id, type, amount, description, location_id, is_pos)
+    VALUES
+      ($1, $2, $3, $4, $5, $6)
+    RETURNING
+      id,
+      is_pos
   `;
 }
 
@@ -56,7 +60,7 @@ function getBudgetBalance() {
 
 function getLastOperations() {
   return `
-    SELECT description, amount, type, created_at, user_id 
+    SELECT description, amount, type, created_at, user_id, is_pos 
     FROM operations 
     ORDER BY created_at DESC 
     LIMIT 100
@@ -67,7 +71,7 @@ function getOperationsWithLocation() {
   return `
     SELECT 
       o.id, o.amount, o.type, o.description, o.created_at, 
-      o.user_id, o.location_id, l.name AS location_name 
+      o.user_id, o.location_id, l.name AS location_name, is_pos AS is_pos
     FROM operations o
     LEFT JOIN location l ON o.location_id = l.id
     ORDER BY o.created_at DESC

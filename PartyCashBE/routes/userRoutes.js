@@ -13,7 +13,7 @@ const checkRole = require('../middlewares/roleMiddleware');
 
 /**
  * @swagger
- * /users:
+ * /api/users:
  *   get:
  *     summary: Get all users
  *     tags:
@@ -31,7 +31,7 @@ router.get('/', authenticateJWT, checkRole('admin', 'staff', 'auditor'), userCon
 
 /**
  * @swagger
- * /users:
+ * /api/users:
  *   post:
  *     summary: Create a new user
  *     tags:
@@ -67,7 +67,7 @@ router.post('/', authenticateJWT, checkRole('admin', 'staff', 'auditor'), userCo
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/users/{id}:
  *   get:
  *     summary: Get user by ID
  *     tags:
@@ -91,7 +91,7 @@ router.get('/:id', authenticateJWT, userController.getUserById);
 
 /**
  * @swagger
- * /users/batch:
+ * /api/users/batch:
  *   post:
  *     summary: Get multiple users by IDs
  *     tags:
@@ -118,7 +118,7 @@ router.post('/batch', authenticateJWT, userController.getUsersByIds);
 
 /**
  * @swagger
- * /users/{id}/role:
+ * /api/users/{id}/role:
  *   patch:
  *     summary: Update a user's role
  *     tags:
@@ -150,7 +150,7 @@ router.patch('/:id/role', authenticateJWT, checkRole('admin', 'staff', 'auditor'
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/users/{id}:
  *   delete:
  *     summary: Soft delete a user
  *     tags:
@@ -174,7 +174,7 @@ router.delete('/:id', authenticateJWT, checkRole('admin', 'staff', 'auditor'), u
 
 /**
  * @swagger
- * /users/{id}/password:
+ * /api/users/{id}/password:
  *   patch:
  *     summary: Reset a user's password
  *     tags:
