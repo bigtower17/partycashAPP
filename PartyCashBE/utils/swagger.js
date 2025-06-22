@@ -33,10 +33,10 @@ const options = {
 const swaggerSpec = swaggerJSDoc(options);
 
 const setupSwagger = (app) => {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
   // Endpoint to serve raw Swagger JSON
-  app.get('/api-docs.json', (req, res) => {
+  app.get('/api/api-docs.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(swaggerSpec);
   });
